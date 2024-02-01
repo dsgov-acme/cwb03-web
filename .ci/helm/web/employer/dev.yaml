@@ -1,0 +1,28 @@
+environment: "dev"
+
+firebase:
+  project: "cwb03-dev"
+
+net:
+  host: "employer-dev.cwb03.dsgov.demo.nuvalence.io"
+
+environmentJSON: {
+  authenticationConfiguration: {
+    firebaseConfiguration: {
+      firebase: {
+        apiKey: "AIzaSyAKsXCEYvBVgfTITzK6wJE01RznBcrMfD8",
+        authDomain: "cwb03-dev.firebaseapp.com",
+      },
+      providerFlow: 'redirect',
+      providerId: 'oidc.agency',
+      tenantId: 'employer-portal-onkhp',
+    },
+    sessionExpiration: {
+      idleTimeSeconds: 1800,
+      sessionTimeSeconds: 64800,
+    },
+  },
+  httpConfiguration: {
+    baseUrl: "https://api-dev.cwb03.dsgov.demo.nuvalence.io",
+  },
+}

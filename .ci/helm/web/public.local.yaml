@@ -1,0 +1,22 @@
+net:
+  host: 'public.cwb03.test'
+
+firebase:
+  project: "cwb03-dev"
+
+environmentJSON: {
+  authenticationConfiguration: {
+    firebaseConfiguration: {
+      firebase: {
+        apiKey: "AIzaSyAKsXCEYvBVgfTITzK6wJE01RznBcrMfD8",
+        authDomain: "cwb03-dev.firebaseapp.com",
+      },
+      providerFlow: 'redirect',
+      providerId: 'oidc.public',
+      tenantId: 'public-portal-9qpou',
+    },
+  },
+  httpConfiguration: {
+    baseUrl: 'http://api.cwb03.test',
+  },
+}
