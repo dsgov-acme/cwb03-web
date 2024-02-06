@@ -14,7 +14,7 @@ environmentJSON: {
         authDomain: "cwb03-dev.dsgov.demo.nuvalence.io",
       },
       providerFlow: 'redirect',
-      providerId: 'oidc.agency',
+      providerId: 'oidc.okta-agency',
       tenantId: 'agency-portal-p0lpq',
     },
     sessionExpiration: {
