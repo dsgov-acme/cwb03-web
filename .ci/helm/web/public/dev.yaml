@@ -13,7 +13,6 @@ environmentJSON: {
         apiKey: "AIzaSyAKsXCEYvBVgfTITzK6wJE01RznBcrMfD8",
         authDomain: "cwb03-dev.firebaseapp.com",
       },
-      providerFlow: 'redirect',
       providerId: 'oidc.public',
       tenantId: 'public-portal-9qpou',
     },
