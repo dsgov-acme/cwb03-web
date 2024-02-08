@@ -11,7 +11,7 @@ environmentJSON: {
     firebaseConfiguration: {
       firebase: {
         apiKey: "AIzaSyAPVRutEPVVTzTIGEUNtp6Ovzc0wWadU3A",
-        authDomain: "cwb03-prod.firebaseapp.com",
+        authDomain: "employer.cwb03.dsgov.demo.nuvalence.io",
       },
       providerFlow: 'redirect',
       providerId: 'oidc.agency',
