@@ -13,8 +13,6 @@ environmentJSON: {
         apiKey: "AIzaSyAKsXCEYvBVgfTITzK6wJE01RznBcrMfD8",
         authDomain: "employer-dev.cwb03.dsgov.demo.nuvalence.io",
       },
-      providerFlow: 'redirect',
-      providerId: 'oidc.agency',
       tenantId: 'employer-portal-onkhp',
     },
     sessionExpiration: {
