@@ -17,9 +17,8 @@ export class PromiseTimeService {
   }
 
   public getPromiseTimesForNewReservation$(transactionId: string): Observable<PromiseTime[]> {
-    // TODO: retrieve promise times for the current transaction - necessary details should be available after saving previous step
-    // this._workApiRoutesService.getPromiseTimesByTransactionId$(transactionId).pipe(tap(loc => this._promiseTimeSubject.next(loc)));
-    return of([
+    // TODO: remove if-else block when implemented
+    const promiseTimes: Observable<PromiseTime[]> = of([
       {
         id: 'promiseTime1',
         time: '14:15',
@@ -41,5 +40,12 @@ export class PromiseTimeService {
         anchor: 'Arrive By',
       },
     ]).pipe(tap(loc => this._promiseTimeSubject.next(loc)));
+    if (transactionId) {
+      return promiseTimes;
+    } else {
+      return promiseTimes;
+    }
+    // TODO: retrieve promise times for the current transaction - necessary details should be available after saving previous step
+    // this._workApiRoutesService.getPromiseTimesByTransactionId$(transactionId).pipe(tap(loc => this._promiseTimeSubject.next(loc)));
   }
 }

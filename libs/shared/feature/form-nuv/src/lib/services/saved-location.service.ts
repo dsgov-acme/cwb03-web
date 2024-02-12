@@ -18,7 +18,8 @@ export class SavedLocationService {
   public getSavedLocations$(userId: string): Observable<MTALocation[]> {
     // TODO: retrieve saved locations for current user from backend API
     // this._workApiRoutesService.getSavedLocationsByUserId$(userId).pipe(tap(loc => this._savedLocationsSubject.next(loc)));
-    return of([
+    // TODO: remove if-else block when implemented
+    const locations: Observable<MTALocation[]> = of([
       {
         id: 'abc123',
         name: 'Halifax House',
@@ -34,5 +35,10 @@ export class SavedLocationService {
         },
       },
     ]).pipe(tap(loc => this._savedLocationsSubject.next(loc)));
+    if (userId) {
+      return locations;
+    } else {
+      return locations;
+    }
   }
 }
