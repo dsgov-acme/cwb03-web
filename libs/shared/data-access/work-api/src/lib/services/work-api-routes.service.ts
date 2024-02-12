@@ -3,7 +3,6 @@ import { Inject, Injectable } from '@angular/core';
 import { ENVIRONMENT_CONFIGURATION, IEnvironment } from '@dsg/shared/utils/environment';
 import { Filter, HttpBaseService, PagingRequestModel, PagingResponseModel } from '@dsg/shared/utils/http';
 import { LoggingService } from '@dsg/shared/utils/logging';
-import { MTALocation } from 'libs/shared/feature/form-nuv/src/lib/components/advanced/select-saved-location/models/formly-select-saved-location.model';
 import { Observable, map, of } from 'rxjs';
 import {
   ConfiguredEnums,
@@ -48,7 +47,6 @@ import { IRecord, IRecordsPaginationResponse, RecordModel, UpdateRecordOptions }
 import { ISchemaTreeDefinition, SchemaTreeDefinitionModel } from '../models/schema-tree/schema-tree.model';
 import { IWorkflow, IWorkflowPaginationResponse, IWorkflowTask, WorkflowModel } from '../models/workflow/workflow.model';
 
-
 /**
  * This service is only used to expose endpoints, no logic should go in this service
  */
@@ -64,9 +62,9 @@ export class WorkApiRoutesService extends HttpBaseService {
     super(_http, `${_environment.httpConfiguration.baseUrl}/wm/api`, _loggingService);
   }
 
-  public getSavedLocationsByUserId$(userId: string): Observable<MTALocation[]> {
-    return this._handleGet$<MTALocation[]>(`/v1/MYURL`);
-  }
+  // public getSavedLocationsByUserId$(userId: string): Observable<MTALocation[]> {
+  //   return this._handleGet$<MTALocation[]>(`/v1/${userId}`);
+  // }
 
   /**
    * Update a form data schema definition
