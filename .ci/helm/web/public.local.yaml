@@ -16,6 +16,9 @@ environmentJSON: {
       tenantId: 'public-portal-9qpou',
     },
   },
+  googlePlacesApiConfiguration: {
+    googleApiKey: 'AIzaSyAyqv7s2T0QgZvMaROiV5NykvkOUEpO0Gc',
+  },
   httpConfiguration: {
     baseUrl: 'http://api.cwb03.test',
   },

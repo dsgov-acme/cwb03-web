@@ -1,6 +1,10 @@
 import { BaseAdvancedFormlyFieldProperties } from '../../../base';
+import { GooglePlace } from '../models/googleplaces.api.model';
 
-export type FormlyAddressFieldProperties = BaseAdvancedFormlyFieldProperties;
+export interface FormlyAddressFieldProperties extends BaseAdvancedFormlyFieldProperties {
+  addressValidationEnabled?: boolean;
+  gotGoogleAddress?: (address: GooglePlace) => GooglePlace;
+}
 
 export const STATE_OPTIONS = [
   { displayTextValue: 'Alabama', key: 'AL' },

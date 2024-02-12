@@ -19,6 +19,9 @@ const _environment: IEnvironment<Partial<FeatureFlags>> = {
     },
   },
   featureFlags: {},
+  googlePlacesApiConfiguration: {
+    googleApiKey: 'AIzaSyBBYWQ7k1N7RYgOJGfTI462AhPoFemDK5A',
+  },
   httpConfiguration: {
     baseUrl: 'http://api.cwb03.test',
   },

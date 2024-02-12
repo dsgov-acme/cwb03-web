@@ -24,9 +24,14 @@ export interface IHTTPConfiguration {
   baseUrl: string;
 }
 
+export interface IGooglePlacesApiConfiguration {
+  googleApiKey: string;
+}
+
 export interface IEnvironment<FeatureFlagT = Record<string, unknown>> {
   authenticationConfiguration: IAuthenticationConfiguration;
   featureFlags?: FeatureFlagT;
+  googlePlacesApiConfiguration?: IGooglePlacesApiConfiguration;
   httpConfiguration: IHTTPConfiguration;
 }
 

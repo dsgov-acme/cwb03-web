@@ -5,7 +5,7 @@ export default {
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {},
   coverageDirectory: '../../../../coverage/libs/shared/feature/form-nuv',
-  coveragePathIgnorePatterns: ['.*/formio/.*\\.(component|model).ts'],
+  coveragePathIgnorePatterns: ['.*/formio/.*\\.(component|model).ts', '.*/formio/.*\\-(component|model).ts'],
   coverageThreshold: {
     global: {
       branches: 0,

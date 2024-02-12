@@ -3,11 +3,13 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { INuverialSelectOption, NuverialSectionHeaderComponent, NuverialTextInputComponent } from '@dsg/shared/ui/nuverial';
 import { FormlyExtension, FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { FormlyBaseComponent, defaultPrePopulateAdvancedComponent, isPrePopulated } from '../../../base';
+import { FormlyGoogleMapsAutocompleteComponent } from '../google-maps-autocomplete/formly-google-maps-autocomplete/formly-google-maps-autocomplete.component';
+import { GooglePlace } from '../models/googleplaces.api.model';
 import { FormlyAddressFieldProperties } from './formly-address.model';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormlyModule, NuverialSectionHeaderComponent, NuverialTextInputComponent],
+  imports: [CommonModule, FormlyModule, NuverialSectionHeaderComponent, FormlyGoogleMapsAutocompleteComponent, NuverialTextInputComponent],
   selector: 'dsg-formly-address',
   standalone: true,
   styleUrls: ['./formly-address.component.scss'],
@@ -16,6 +18,13 @@ import { FormlyAddressFieldProperties } from './formly-address.model';
 export class FormlyAddressComponent extends FormlyBaseComponent<FormlyAddressFieldProperties> implements FormlyExtension, OnInit {
   public countrySelectLabels = new Map();
   public reviewDetailsMap = new Map<string, string>();
+
+  public get reviewDetails() {
+    this.reviewDetailsMap.set('countryLabel', this.countrySelectLabels.get(this.reviewDetailsMap.get('countryCode')));
+    const model = Object.fromEntries(this.reviewDetailsMap);
+
+    return model;
+  }
 
   public prePopulate(field: FormlyFieldConfig<FormlyAddressFieldProperties>): void {
     if (isPrePopulated(field)) return;
@@ -31,85 +40,9 @@ export class FormlyAddressComponent extends FormlyBaseComponent<FormlyAddressFie
     };
 
     const fieldGroup = [field.props?.label ? labelField : {}, ...(field.fieldGroup || [])].map(_field => {
-      switch (true) {
-        case _field.props?.['componentId'] === 'addressLine1':
-          return {
-            ..._field,
-            className: 'flex-half',
-            props: {
-              ..._field.props,
-              autocomplete: 'address-line1',
-              type: 'text',
-            },
-            type: 'nuverialTextInput',
-          };
-        case _field.props?.['componentId'] === 'addressLine2':
-          return {
-            ..._field,
-            className: 'flex-half',
-            props: {
-              ..._field.props,
-              autocomplete: 'address-line2',
-              type: 'text',
-            },
-            type: 'nuverialTextInput',
-          };
-        case _field.props?.['componentId'] === 'city':
-          return {
-            ..._field,
-            className: 'flex-half',
-            props: {
-              ..._field.props,
-              autocomplete: 'address-level2',
-              type: 'text',
-            },
-            type: 'nuverialTextInput',
-          };
-        case _field.props?.['componentId'] === 'stateCode':
-          return {
-            ..._field,
-            className: 'flex-half',
-            props: {
-              ..._field.props,
-              autocomplete: 'address-level1',
-            },
-            type: 'nuverialSelect',
-          };
-        case _field.props?.['componentId'] === 'postalCode':
-          return {
-            ..._field,
-            className: 'flex-quarter',
-            props: {
-              ..._field.props,
-              autocomplete: 'postal-code',
-              type: 'text',
-            },
-            type: 'nuverialTextInput',
-          };
-        case _field.props?.['componentId'] === 'postalCodeExtension':
-          return {
-            ..._field,
-            className: 'flex-quarter',
-            props: {
-              ..._field.props,
-              type: 'text',
-            },
-            type: 'nuverialTextInput',
-          };
-        case _field.props?.['componentId'] === 'countryCode':
-          return {
-            ..._field,
-            className: 'flex-half',
-            props: {
-              ..._field.props,
-              autocomplete: 'country',
-            },
-            type: 'nuverialSelect',
-          };
-        default:
-          return _field;
-      }
+      return this._populateAddressConfiguration(_field, field);
     });
+
     field.fieldGroup = fieldGroup;
   }
 
@@ -126,9 +59,66 @@ export class FormlyAddressComponent extends FormlyBaseComponent<FormlyAddressFie
     return item.id;
   }
 
-  public get reviewDetails() {
-    this.reviewDetailsMap.set('countryLabel', this.countrySelectLabels.get(this.reviewDetailsMap.get('countryCode')));
+  private _populateAddressConfiguration(_field: FormlyFieldConfig, field: FormlyFieldConfig<FormlyAddressFieldProperties>): FormlyFieldConfig {
+    const componentId = _field.props?.['componentId'];
 
-    return Object.fromEntries(this.reviewDetailsMap);
+    if (componentId === 'addressLine1') {
+      return this._populateAddressLine1(_field, field);
+    } else if (componentId === 'addressLine2') {
+      return this._processAddressField(_field, 'address-line2');
+    } else if (componentId === 'city') {
+      return this._processAddressField(_field, 'address-level2');
+    } else if (componentId === 'stateCode') {
+      return this._processAddressField(_field, 'address-level1');
+    } else if (componentId === 'postalCode') {
+      return this._processAddressField(_field, 'postal-code', 'flex-quarter');
+    } else if (componentId === 'postalCodeExtension') {
+      return this._processAddressField(_field, undefined, 'flex-quarter');
+    } else if (componentId === 'countryCode') {
+      return this._processAddressField(_field, 'address-line2');
+    } else {
+      return _field;
+    }
+  }
+
+  private _populateAddressLine1(_field: FormlyFieldConfig, field: FormlyFieldConfig<FormlyAddressFieldProperties>): FormlyFieldConfig {
+    return {
+      ..._field,
+      className: 'flex-half',
+      props: {
+        ..._field.props,
+        autocomplete: 'address-line1',
+        ...(field.props?.addressValidationEnabled && {
+          gotGoogleAddress: (address: GooglePlace) => this._gotGoogleAddress(address, field),
+        }),
+        type: 'text',
+      },
+      type: field.props?.addressValidationEnabled ? 'nuverialGoogleMapsAutocomplete' : 'nuverialTextInput',
+    };
+  }
+
+  private _gotGoogleAddress(address: GooglePlace, field: FormlyFieldConfig<FormlyAddressFieldProperties>) {
+    if (!address) return;
+
+    field.fieldGroup?.forEach(formField => {
+      const componentId: string = formField.props?.['componentId'];
+
+      if (!componentId) return;
+
+      formField.formControl?.setValue(address[componentId as keyof GooglePlace]);
+    });
+  }
+
+  private _processAddressField(_field: FormlyFieldConfig, autocomplete?: string, className = 'flex-half'): FormlyFieldConfig {
+    return {
+      ..._field,
+      className,
+      props: {
+        ..._field.props,
+        ...(autocomplete ? { autocomplete } : {}),
+        type: 'text',
+      },
+      type: 'nuverialTextInput',
+    };
   }
 }

@@ -1,3 +1,4 @@
+export * from './advanced/address';
 export * from './advanced/form-list';
 export * from './advanced/select-promise-time';
 export * from './advanced/select-saved-location';

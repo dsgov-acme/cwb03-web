@@ -12,6 +12,21 @@ import { AuthenticationAdapter } from '../../models/authentication.adapter';
 import { SessionTimeoutService } from '../session-timeout/session-timeout.service';
 import { AuthenticationService } from './authentication.service';
 
+const assignMock = jest.fn();
+window.location = { assign: assignMock as any } as Location;
+Object.defineProperty(window, 'location', {
+  value: {
+    assign: assignMock,
+    hash: {
+      endsWith: assignMock,
+      includes: assignMock,
+    },
+  },
+  writable: true,
+});
+
+const original = window.location;
+
 describe('AuthenticationService', () => {
   let adapter: AuthenticationAdapter;
   let apiService: PortalApiRoutesService;
@@ -55,6 +70,21 @@ describe('AuthenticationService', () => {
     enumsService = MockService(EnumerationsStateService);
     accessControlService = MockService(AccessControlService);
     service = new AuthenticationService(router, adapter, timeoutService, {}, apiService, snackBarService, userStateService, enumsService, accessControlService);
+  });
+
+  beforeAll(() => {
+    Object.defineProperty(window, 'location', {
+      configurable: true,
+      value: { reload: jest.fn() },
+    });
+  });
+
+  afterAll(() => {
+    Object.defineProperty(window, 'location', { configurable: true, value: original });
+  });
+
+  afterEach(() => {
+    assignMock.mockClear();
   });
 
   it('should  initialized', () => {

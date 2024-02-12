@@ -1,6 +1,6 @@
 import { Directive, EventEmitter, Injector, Input, Output } from '@angular/core';
 import { FormControl, FormControlDirective, FormControlName, FormGroupDirective, NgControl, NgModel, ValidationErrors } from '@angular/forms';
-import { Observable, combineLatest, startWith } from 'rxjs';
+import { combineLatest, Observable, startWith } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { DEFAULT_VALIDATION_MESSAGES, NuverialValidationErrorType } from '../../models';
 @Directive({
@@ -9,6 +9,8 @@ import { DEFAULT_VALIDATION_MESSAGES, NuverialValidationErrorType } from '../../
   standalone: true,
 })
 export class FormInputBaseDirective {
+  @Input() public formControl!: FormControl;
+
   /**
    * Validation error messages by validation error type
    */
@@ -23,7 +25,6 @@ export class FormInputBaseDirective {
    */
   public error$!: Observable<string>;
 
-  @Input() public formControl!: FormControl;
   protected _formValue!: unknown;
   protected _ngControl!: NgControl;
   protected readonly _injector!: Injector;
@@ -39,10 +40,6 @@ export class FormInputBaseDirective {
     // required and defined ControlValueAccessor
   };
 
-  protected _controlValueAccessorChangeFn: (value: unknown) => void = () => {
-    // required and defined ControlValueAccessor
-  };
-
   // Implemented as part of ControlValueAccessor.
   public registerOnChange(_fn: (value: unknown) => void) {
     this._controlValueAccessorChangeFn = _fn;
@@ -55,6 +52,11 @@ export class FormInputBaseDirective {
   public writeValue(value: unknown) {
     this._formValue = value;
   }
+
+  protected _controlValueAccessorChangeFn: (value: unknown) => void = () => {
+    // required and defined ControlValueAccessor
+  };
+
   /**
    * Initial form controls and event observables should be typically called by OnInit
    * @protected

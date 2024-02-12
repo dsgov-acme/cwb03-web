@@ -3,7 +3,7 @@
     "module": "commonjs",
     "outDir": "../../../../dist/out-tsc",
     "target": "es2016",
-    "types": ["jest", "node"]
+    "types": ["jest", "node", "googlemaps"]
   },
   "extends": "./tsconfig.json",
   "files": ["src/test-setup.ts"],
