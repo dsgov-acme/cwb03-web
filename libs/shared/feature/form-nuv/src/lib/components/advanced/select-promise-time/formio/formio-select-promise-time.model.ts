@@ -1,5 +1,5 @@
 import { Injector } from '@angular/core';
-import { FormioCustomComponentInfo, registerCustomFormioComponent } from '@formio/angular';
+import { FormioCustomComponentInfo, registerCustomFormioComponent } from '../../../../utils';
 import {
   DEFAULT_COMPONENT_OPTIONS,
   defaultColorThemeConfiguration,
