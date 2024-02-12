@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Validators } from '@angular/forms';
+import { GoogleMapsModule } from '@angular/google-maps';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { FormlyAddressComponent } from './components/advanced/address';
+import { FormlyGoogleMapsAutocompleteComponent } from './components/advanced/address/google-maps-autocomplete/formly-google-maps-autocomplete/formly-google-maps-autocomplete.component';
+import { GoogleMapsAutocompleteComponent } from './components/advanced/address/google-maps-autocomplete/google-maps-autocomplete.component';
 import { FormlyFileUploadComponent, FormlyFileUploaderComponent, FormlyMultipleFileUploadComponent } from './components/advanced/file-upload';
 import { FormlyFormListComponent } from './components/advanced/form-list/formly/formly-form-list.component';
 import { FormlyLogicValidatorComponent } from './components/advanced/logic-validator';
@@ -28,6 +31,8 @@ import { FormlyTextInputComponent } from './components/text-input';
     FormlyMaterialModule,
     MatNativeDateModule,
     MatDialogModule,
+    GoogleMapsModule,
+    GoogleMapsAutocompleteComponent,
     FormlyModule.forRoot({
       types: [
         { component: FormlyAddressComponent, name: 'nuverialAddress' },
@@ -38,6 +43,7 @@ import { FormlyTextInputComponent } from './components/text-input';
         { component: FormlyFileUploadComponent, name: 'nuverialFileUpload' },
         { component: FormlyMultipleFileUploadComponent, name: 'nuverialMultipleFileUpload' },
         { component: FormlyFileUploaderComponent, name: 'nuverialFileUploader' },
+        { component: FormlyGoogleMapsAutocompleteComponent, name: 'nuverialGoogleMapsAutocomplete' },
         { component: FormlyLogicValidatorComponent, name: 'nuverialLogicValidator' },
         { component: FormlyFormListComponent, name: 'nuverialFormList' },
         { component: FormlySectionHeaderComponent, name: 'nuverialSectionHeader' },

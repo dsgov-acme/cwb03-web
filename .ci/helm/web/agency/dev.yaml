@@ -22,6 +22,9 @@ environmentJSON: {
       sessionTimeSeconds: 64800,
     },
   },
+  googlePlacesApiConfiguration: {
+    googleApiKey: 'AIzaSyAyqv7s2T0QgZvMaROiV5NykvkOUEpO0Gc',
+  },
   httpConfiguration: {
     baseUrl: "https://api-dev.cwb03.dsgov.demo.nuvalence.io",
   },

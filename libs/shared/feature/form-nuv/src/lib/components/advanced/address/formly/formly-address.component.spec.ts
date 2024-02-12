@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 import { LoggingService } from '@dsg/shared/utils/logging';
@@ -12,6 +12,9 @@ import { FormStateMode } from '../../../forms';
 import { FormlySectionHeaderComponent } from '../../../section-header';
 import { FormlySelectComponent } from '../../../select';
 import { FormlyTextInputComponent } from '../../../text-input';
+import { FormlyGoogleMapsAutocompleteComponent } from '../google-maps-autocomplete/formly-google-maps-autocomplete/formly-google-maps-autocomplete.component';
+import { GoogleMapsAutocompleteComponent } from '../google-maps-autocomplete/google-maps-autocomplete.component';
+import { GooglePlace } from '../models/googleplaces.api.model';
 import { FormlyAddressComponent } from './formly-address.component';
 import { COUNTRY_OPTIONS, FormlyAddressFieldProperties, STATE_OPTIONS } from './formly-address.model';
 
@@ -111,6 +114,25 @@ const mockFields: FormlyFieldConfig[] = [
   },
 ];
 
+const setupGoogleMock = () => {
+  /*** Mock Google Maps JavaScript API ***/
+  const google = {
+    maps: {
+      places: {
+        ['Autocomplete']: class {
+          public addListener() {
+            // do nothing
+          }
+        },
+        ['AutocompleteService']: () => {
+          // do nothing
+        },
+      },
+    } as any,
+  };
+  global.window.google = google;
+};
+
 const getFixtureByTemplate = async (props?: Record<string, unknown>) => {
   const template = MockTemplate;
   const { fixture } = await render(template, {
@@ -123,11 +145,13 @@ const getFixtureByTemplate = async (props?: Record<string, unknown>) => {
     },
     imports: [
       ReactiveFormsModule,
+      GoogleMapsAutocompleteComponent,
       FormlyModule.forRoot({
         ...MockDefaultFormlyModuleConfiguration,
         types: [
           { component: FormlyAddressComponent, name: 'nuverialAddress' },
           { component: FormlySectionHeaderComponent, name: 'nuverialSectionHeader' },
+          { component: FormlyGoogleMapsAutocompleteComponent, name: 'nuverialGoogleMapsAutocomplete' },
           { component: FormlyTextInputComponent, name: 'nuverialTextInput' },
           { component: FormlySelectComponent, name: 'nuverialSelect' },
           { component: FormlySelectComponent, name: 'nuverialCheckbox' },
@@ -144,6 +168,7 @@ const getFixtureByTemplate = async (props?: Record<string, unknown>) => {
 
 describe('FormlyAddressComponent', () => {
   beforeAll(() => {
+    setupGoogleMock();
     TestBed.resetTestEnvironment();
     TestBed.initTestEnvironment(
       BrowserDynamicTestingModule,
@@ -225,5 +250,396 @@ describe('FormlyAddressComponent', () => {
     fixture.detectChanges();
 
     expect(component.reviewDetails).toEqual(reviewDetails);
+  });
+
+  describe('Field Group Transformation', () => {
+    it('should transform the field group correctly', () => {
+      const fieldGroup = [
+        {
+          props: {
+            componentId: 'addressLine1',
+            label: 'Address Line 1',
+            required: true,
+          },
+        },
+        {
+          props: {
+            componentId: 'addressLine2',
+            label: 'Address Line 2 (optional)',
+          },
+        },
+        {
+          props: {
+            componentId: 'city',
+            label: 'City',
+            required: true,
+          },
+        },
+        {
+          props: {
+            componentId: 'stateCode',
+            label: 'State',
+            required: true,
+            selectOptions: STATE_OPTIONS,
+          },
+        },
+        {
+          props: {
+            componentId: 'postalCode',
+            label: 'Zip Code',
+            required: true,
+          },
+        },
+        {
+          props: {
+            componentId: 'postalCodeExtension',
+            label: 'Ext. (Optional)',
+          },
+        },
+        {
+          props: {
+            componentId: 'countryCode',
+            label: 'Country',
+            required: true,
+            selectOptions: COUNTRY_OPTIONS,
+          },
+        },
+      ];
+
+      const transformedFieldGroup = fieldGroup.map(_field => {
+        switch (true) {
+          case _field.props?.['componentId'] === 'addressLine1':
+            return {
+              ..._field,
+              className: 'flex-half',
+              props: {
+                ..._field.props,
+                autocomplete: 'address-line1',
+                type: 'text',
+              },
+              type: 'nuverialTextInput',
+            };
+          case _field.props?.['componentId'] === 'addressLine2':
+            return {
+              ..._field,
+              className: 'flex-half',
+              props: {
+                ..._field.props,
+                autocomplete: 'address-line2',
+                type: 'text',
+              },
+              type: 'nuverialTextInput',
+            };
+          case _field.props?.['componentId'] === 'city':
+            return {
+              ..._field,
+              className: 'flex-half',
+              props: {
+                ..._field.props,
+                autocomplete: 'address-level2',
+                type: 'text',
+              },
+              type: 'nuverialTextInput',
+            };
+          case _field.props?.['componentId'] === 'stateCode':
+            return {
+              ..._field,
+              className: 'flex-half',
+              props: {
+                ..._field.props,
+                autocomplete: 'address-level1',
+              },
+              type: 'nuverialSelect',
+            };
+          case _field.props?.['componentId'] === 'postalCode':
+            return {
+              ..._field,
+              className: 'flex-quarter',
+              props: {
+                ..._field.props,
+                autocomplete: 'postal-code',
+                type: 'text',
+              },
+              type: 'nuverialTextInput',
+            };
+          case _field.props?.['componentId'] === 'postalCodeExtension':
+            return {
+              ..._field,
+              className: 'flex-quarter',
+              props: {
+                ..._field.props,
+                type: 'text',
+              },
+              type: 'nuverialTextInput',
+            };
+          case _field.props?.['componentId'] === 'countryCode':
+            return {
+              ..._field,
+              className: 'flex-half',
+              props: {
+                ..._field.props,
+                autocomplete: 'country',
+              },
+              type: 'nuverialSelect',
+            };
+          default:
+            return _field;
+        }
+      });
+
+      expect(transformedFieldGroup).toEqual([
+        {
+          props: {
+            componentId: 'addressLine1',
+            label: 'Address Line 1',
+            required: true,
+            autocomplete: 'address-line1',
+            type: 'text',
+          },
+          className: 'flex-half',
+          type: 'nuverialTextInput',
+        },
+        {
+          props: {
+            componentId: 'addressLine2',
+            label: 'Address Line 2 (optional)',
+            autocomplete: 'address-line2',
+            type: 'text',
+          },
+          className: 'flex-half',
+          type: 'nuverialTextInput',
+        },
+        {
+          props: {
+            componentId: 'city',
+            label: 'City',
+            required: true,
+            autocomplete: 'address-level2',
+            type: 'text',
+          },
+          className: 'flex-half',
+          type: 'nuverialTextInput',
+        },
+        {
+          props: {
+            componentId: 'stateCode',
+            label: 'State',
+            required: true,
+            selectOptions: STATE_OPTIONS,
+            autocomplete: 'address-level1',
+          },
+          className: 'flex-half',
+          type: 'nuverialSelect',
+        },
+        {
+          props: {
+            componentId: 'postalCode',
+            label: 'Zip Code',
+            required: true,
+            autocomplete: 'postal-code',
+            type: 'text',
+          },
+          className: 'flex-quarter',
+          type: 'nuverialTextInput',
+        },
+        {
+          props: {
+            componentId: 'postalCodeExtension',
+            label: 'Ext. (Optional)',
+            type: 'text',
+          },
+          className: 'flex-quarter',
+          type: 'nuverialTextInput',
+        },
+        {
+          props: {
+            componentId: 'countryCode',
+            label: 'Country',
+            required: true,
+            selectOptions: COUNTRY_OPTIONS,
+            autocomplete: 'country',
+          },
+          className: 'flex-half',
+          type: 'nuverialSelect',
+        },
+      ]);
+    });
+  });
+
+  describe('_populateAddressLine1', () => {
+    it('should populate address line 1 field with Google address if addressValidationEnabled is true', async () => {
+      const field: FormlyFieldConfig<FormlyAddressFieldProperties> = {
+        key: 'personalInformation.currentAddress.addressLine1',
+        props: {
+          componentId: 'addressLine1',
+          label: 'Address Line 1',
+          addressValidationEnabled: true,
+        },
+      };
+
+      const mockGooglePlace: GooglePlace = new GooglePlace({
+        streetNumber: '1234 First St',
+      });
+
+      const _field: FormlyFieldConfig = {
+        className: 'flex-full',
+        props: {
+          autocomplete: 'address-line1',
+          type: 'text',
+        },
+        type: 'nuverialTextInput',
+      };
+
+      const expectedField: FormlyFieldConfig = {
+        ..._field,
+        className: 'flex-half',
+        props: {
+          ..._field.props,
+          autocomplete: 'address-line1',
+          gotGoogleAddress: expect.any(Function),
+          type: 'text',
+        },
+        type: 'nuverialGoogleMapsAutocomplete',
+      };
+
+      const { component } = await getFixtureByTemplate();
+      const result = component['_populateAddressLine1'](_field, field);
+
+      expect(result).toEqual(expectedField);
+
+      // Test the gotGoogleAddress callback
+      const gotGoogleAddress = result.props?.['gotGoogleAddress'];
+      expect(gotGoogleAddress).toBeDefined();
+
+      // Mock the fieldGroup
+      const formField1: FormlyFieldConfig = {
+        props: {
+          componentId: 'addressLine1',
+        },
+        formControl: new FormControl(),
+      };
+
+      const formField2: FormlyFieldConfig = {
+        props: {
+          componentId: 'addressLine2',
+        },
+        formControl: new FormControl(),
+      };
+
+      field.fieldGroup = [formField1, formField2];
+
+      // Call the gotGoogleAddress callback
+      gotGoogleAddress?.(mockGooglePlace);
+
+      // Verify that the formControl values are set correctly
+      expect(formField1.formControl?.value).toEqual(mockGooglePlace.addressLine1);
+      expect(formField2.formControl?.value).toEqual('');
+    });
+
+    it('should not populate address line 1 field with Google address if addressValidationEnabled is false', async () => {
+      const field: FormlyFieldConfig<FormlyAddressFieldProperties> = {
+        key: 'personalInformation.currentAddress.addressLine1',
+        props: {
+          componentId: 'addressLine1',
+          label: 'Address Line 1',
+          addressValidationEnabled: false,
+        },
+      };
+
+      const _field: FormlyFieldConfig = {
+        className: 'flex-full',
+        props: {
+          autocomplete: 'address-line1',
+          type: 'text',
+        },
+        type: 'nuverialTextInput',
+      };
+
+      const expectedField: FormlyFieldConfig = {
+        ..._field,
+        className: 'flex-half',
+        props: {
+          ..._field.props,
+          autocomplete: 'address-line1',
+          type: 'text',
+        },
+        type: 'nuverialTextInput',
+      };
+
+      const { component } = await getFixtureByTemplate();
+      const result = component['_populateAddressLine1'](_field, field);
+
+      expect(result).toEqual(expectedField);
+    });
+  });
+
+  it('should set form control values based on the GooglePlace address', async () => {
+    const address: GooglePlace = {
+      addressLine1: '1234 first St',
+      addressLine2: 'line 2',
+      city: 'troy',
+      countryCode: 'US',
+      country: 'United States',
+      postalCode: '55555',
+      postalCodeExtension: '1234',
+      stateCode: 'NY',
+    } as GooglePlace;
+
+    const fieldGroup: Array<FormlyFieldConfig<FormlyAddressFieldProperties>> = [
+      {
+        props: {
+          componentId: 'addressLine1',
+        },
+        formControl: new FormControl(),
+      },
+      {
+        props: {
+          componentId: 'addressLine2',
+        },
+        formControl: new FormControl(),
+      },
+      {
+        props: {
+          componentId: 'city',
+        },
+        formControl: new FormControl(),
+      },
+      {
+        props: {
+          componentId: 'stateCode',
+        },
+        formControl: new FormControl(),
+      },
+      {
+        props: {
+          componentId: 'postalCode',
+        },
+        formControl: new FormControl(),
+      },
+      {
+        props: {
+          componentId: 'postalCodeExtension',
+        },
+        formControl: new FormControl(),
+      },
+      {
+        props: {
+          componentId: 'countryCode',
+        },
+        formControl: new FormControl(),
+      },
+    ];
+
+    const { component } = await getFixtureByTemplate();
+
+    component['_gotGoogleAddress'](address, { fieldGroup });
+
+    expect(fieldGroup[0].formControl?.value).toEqual('1234 first St');
+    expect(fieldGroup[1].formControl?.value).toEqual('line 2');
+    expect(fieldGroup[2].formControl?.value).toEqual('troy');
+    expect(fieldGroup[3].formControl?.value).toEqual('NY');
+    expect(fieldGroup[4].formControl?.value).toEqual('55555');
+    expect(fieldGroup[5].formControl?.value).toEqual('1234');
+    expect(fieldGroup[6].formControl?.value).toEqual('US');
   });
 });

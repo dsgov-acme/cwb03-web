@@ -124,6 +124,7 @@ function editForm() {
                     ...defaultFieldLabelConfiguration,
                     validate: { required: false },
                   },
+                  { ...addressValidationConfiguration },
                   { ...defaultFieldWidthConfiguration },
                   { ...addressFieldsConfiguration },
                 ],
@@ -142,10 +143,32 @@ function editForm() {
   };
 }
 
+const addressValidationConfiguration = {
+  defaultValue: false,
+  disabled: false,
+  input: true,
+  key: 'props.addressValidationEnabled',
+  label: 'Address Validation Enabled',
+  placeholder: 'address validaiton enabled',
+  tooltip: 'When enabled, the address line 1 field will validate and auto complete.',
+  type: 'checkbox',
+  value: false,
+  weight: 0,
+};
+
 const addressFieldsConfiguration = {
   components: [
     {
       ...defaultPropertyKeyConfiguration,
+      props: {
+        allowedSchemaTypes: ['String'],
+      },
+      validate: {
+        custom: `if(input === null) { valid = "Form schema does not exist, please configure a new schema in the transaction details page"; }\
+    else if (!row.hide && input === "") { valid = "Property key name is required"; }\
+    else { valid = true; }`,
+        ...{ ...formioAlphaNumericValidator, required: false },
+      },
     },
     {
       input: true,

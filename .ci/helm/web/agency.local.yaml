@@ -16,6 +16,9 @@ environmentJSON: {
       tenantId: 'agency-portal-p0lpq',
     },
   },
+  googlePlacesApiConfiguration: {
+    googleApiKey: 'AIzaSyAyqv7s2T0QgZvMaROiV5NykvkOUEpO0Gc',
+  },
   httpConfiguration: {
     baseUrl: 'http://api.cwb03.test',
   },

@@ -70,8 +70,6 @@ const MAX_MAXLENGTH = 524288;
   templateUrl: './text-input.component.html',
 })
 export class NuverialTextInputComponent extends FormInputBaseDirective implements ControlValueAccessor, OnInit, OnDestroy {
-  public useMaxLength = false;
-  private _maxlength = MAX_MAXLENGTH;
   /**
    * Attached to the aria-label attribute of the host element. This should be considered a required input field, if not provided a warning message will be logged
    */
@@ -101,19 +99,6 @@ export class NuverialTextInputComponent extends FormInputBaseDirective implement
    * ie: (000) 000-0000
    */
   @Input() public maskPattern!: string;
-
-  /**
-   * The maximum allowed text length. If this property is set, a hit will be displayed showing the number of used/available characters
-   */
-  @Input()
-  public set maxlength(len: number) {
-    len > 0 && (this._maxlength = len);
-    this.useMaxLength = this._maxlength !== MAX_MAXLENGTH;
-  }
-
-  public get maxlength(): number {
-    return this._maxlength;
-  }
 
   /**
    * The place holder text for the form input field
@@ -162,7 +147,40 @@ export class NuverialTextInputComponent extends FormInputBaseDirective implement
    */
   @Output() public readonly clickIcon: EventEmitter<'prefix' | 'suffix'> = new EventEmitter<'prefix' | 'suffix'>();
 
+  /**
+   * Expose the native input element for accessing from parent component
+   * (Needed for google places autocomplete)
+   */
+  @Output() public readonly exposeInput: EventEmitter<ElementRef> = new EventEmitter<ElementRef>();
+
   @ViewChild('formBaseInput', { static: true }) private readonly _inputElementRef!: ElementRef;
+
+  public passwordVisible = false;
+  public useMaxLength = false;
+
+  private _maxlength = MAX_MAXLENGTH;
+
+  constructor(
+    protected readonly _focusMonitor: FocusMonitor,
+    @Inject(Injector) protected override readonly _injector: Injector,
+    @Self() @Optional() protected override readonly _ngControl: NgControl,
+  ) {
+    super();
+    this._ngControl && (this._ngControl.valueAccessor = this);
+  }
+
+  /**
+   * The maximum allowed text length. If this property is set, a hit will be displayed showing the number of used/available characters
+   */
+  @Input()
+  public set maxlength(len: number) {
+    len > 0 && (this._maxlength = len);
+    this.useMaxLength = this._maxlength !== MAX_MAXLENGTH;
+  }
+
+  public get maxlength(): number {
+    return this._maxlength;
+  }
 
   /**
    * this getter is so directives can access the private view child of the input
@@ -170,8 +188,6 @@ export class NuverialTextInputComponent extends FormInputBaseDirective implement
   public get inputElementRef(): ElementRef {
     return this._inputElementRef;
   }
-
-  public passwordVisible = false;
 
   public get inputType() {
     if (!this.type) {
@@ -192,16 +208,8 @@ export class NuverialTextInputComponent extends FormInputBaseDirective implement
     return this.suffixIcon;
   }
 
-  constructor(
-    protected readonly _focusMonitor: FocusMonitor,
-    @Inject(Injector) protected override readonly _injector: Injector,
-    @Self() @Optional() protected override readonly _ngControl: NgControl,
-  ) {
-    super();
-    this._ngControl && (this._ngControl.valueAccessor = this);
-  }
-
   public ngOnInit() {
+    this.exposeInput.emit(this._inputElementRef);
     this.formControl = this._modelFormControl();
     this._initErrorHandler(this._focusMonitor.monitor(this._inputElementRef, true).pipe(filter(origin => origin === null)));
   }
