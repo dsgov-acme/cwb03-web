@@ -30,7 +30,7 @@ import {
   NuverialTrimInputDirective,
 } from '@dsg/shared/ui/nuverial';
 import { Filter, PagingRequestModel } from '@dsg/shared/utils/http';
-import { catchError, combineLatest, EMPTY, map, Observable, of, switchMap, take, tap } from 'rxjs';
+import { EMPTY, Observable, catchError, combineLatest, map, of, switchMap, take, tap } from 'rxjs';
 import { FormConfigurationsComponent } from '../form-configurations/form-configurations.component';
 import { FormSelectionRulesComponent } from '../form-selection-rules/form-selection-rules.component';
 import { TransactionDefinitionsFormService } from './transaction-definitions-form.service';

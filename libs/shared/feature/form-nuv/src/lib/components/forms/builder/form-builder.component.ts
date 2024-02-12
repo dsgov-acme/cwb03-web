@@ -37,6 +37,8 @@ import { registerAddressComponent } from '../../advanced/address';
 import { registerFileUploadComponent, registerMultipleFileUploadComponent } from '../../advanced/file-upload';
 import { registerObjectListComponent } from '../../advanced/form-list';
 import { registerLogicValidatorComponent } from '../../advanced/logic-validator';
+import { registerSelectPromiseTimeComponent } from '../../advanced/select-promise-time';
+import { registerSelectSavedLocationComponent } from '../../advanced/select-saved-location';
 import { registerCheckboxComponent } from '../../checkbox';
 import { registerCheckboxCardComponent } from '../../checkbox-card';
 import { registerDateInputComponent } from '../../date-input/formio/date-input.model';
@@ -226,6 +228,8 @@ export class FormBuilderComponent implements DoCheck, OnDestroy {
     registerTextAreaComponent(this._injector);
     registerTextContentComponent(this._injector);
     registerTextInputComponent(this._injector);
+    registerSelectSavedLocationComponent(this._injector);
+    registerSelectPromiseTimeComponent(this._injector);
   }
 
   public loadForm$ = this._route.paramMap.pipe(

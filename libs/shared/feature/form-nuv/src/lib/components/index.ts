@@ -1,4 +1,6 @@
 export * from './advanced/form-list';
+export * from './advanced/select-promise-time';
+export * from './advanced/select-saved-location';
 export * from './checkbox';
 export * from './checkbox-card';
 export * from './date-picker';

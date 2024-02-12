@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { INuverialSelectOption, NuverialSectionHeaderComponent, NuverialTextInputComponent } from '@dsg/shared/ui/nuverial';
 import { FormlyExtension, FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
-import { defaultPrePopulateAdvancedComponent, FormlyBaseComponent, isPrePopulated } from '../../../base';
+import { FormlyBaseComponent, defaultPrePopulateAdvancedComponent, isPrePopulated } from '../../../base';
 import { FormlyAddressFieldProperties } from './formly-address.model';
 
 @Component({
@@ -118,7 +118,7 @@ export class FormlyAddressComponent extends FormlyBaseComponent<FormlyAddressFie
       this.reviewDetailsMap.set(field.props?.['componentId'], this.form.get(field?.key?.toString() || '')?.value);
     });
     this.field.fieldGroup
-      ?.find(field => field.props?.['componentId'] === `countryCode`)
+      ?.find(field => field.props?.['componentId'] === 'countryCode')
       ?.props?.['selectOptions']?.forEach((option: INuverialSelectOption) => this.countrySelectLabels.set(option.key, option.displayTextValue));
   }
 
@@ -128,8 +128,7 @@ export class FormlyAddressComponent extends FormlyBaseComponent<FormlyAddressFie
 
   public get reviewDetails() {
     this.reviewDetailsMap.set('countryLabel', this.countrySelectLabels.get(this.reviewDetailsMap.get('countryCode')));
-    const model = Object.fromEntries(this.reviewDetailsMap);
 
-    return model;
+    return Object.fromEntries(this.reviewDetailsMap);
   }
 }

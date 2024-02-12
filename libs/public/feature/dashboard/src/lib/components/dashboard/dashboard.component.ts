@@ -86,14 +86,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public selectOption: INuverialSelectOption[] = [
     {
       disabled: false,
-      displayTextValue: 'Financial Benefit',
-      key: 'FinancialBenefit',
+      displayTextValue: 'New Reservation',
+      key: 'MTAReservation',
       selected: false,
     },
     {
       disabled: false,
-      displayTextValue: 'Unemployment Insurance Proof',
-      key: 'UnemploymentInsurance',
+      displayTextValue: 'New Saved Location',
+      key: 'MTALocation',
       selected: false,
     },
   ];

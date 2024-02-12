@@ -1,0 +1,7 @@
+<nuverial-radio-cards
+  [columns]="props.cols"
+  [formControl]="formControl"
+  [legend]="props.label"
+  [radioCards]="(selectOptions$ | async) || []"
+  [required]="props.required!"
+/>
