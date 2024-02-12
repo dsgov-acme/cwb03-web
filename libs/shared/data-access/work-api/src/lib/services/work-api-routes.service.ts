@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { ENVIRONMENT_CONFIGURATION, IEnvironment } from '@dsg/shared/utils/environment';
 import { Filter, HttpBaseService, PagingRequestModel, PagingResponseModel } from '@dsg/shared/utils/http';
 import { LoggingService } from '@dsg/shared/utils/logging';
-import { Observable, map } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 import {
   ConfiguredEnums,
   EmployerProfileInvite,
@@ -20,6 +20,7 @@ import {
   INotesPaginationResponse,
   IParentSchemas,
   IProcessDocumentsResponse,
+  IRecordListCount,
   ISchemaDefinition,
   ISchemasPaginationResponse,
   ITransaction,
@@ -30,6 +31,8 @@ import {
   NewConversationModel,
   NoteModel,
   ProcessDocumentsModel,
+  RecordListCountModel,
+  RecordListModel,
   SchemaDefinitionModel,
   TransactionDefinitionModel,
   TransactionModel,
@@ -39,6 +42,8 @@ import {
 import { DashboardCountModel, IDashboardCount } from '../models/dashboard/dashboard-count.model';
 import { DashboardModel, IDashboard } from '../models/dashboard/dashboard.model';
 import { EmployerProfileLink, IEmployerProfileLink } from '../models/employer-profile/employer-profile-link.model';
+import { IRecordDefinition, RecordDefinitionModel } from '../models/record-definition/record-definition.model';
+import { IRecord, IRecordsPaginationResponse, RecordModel, UpdateRecordOptions } from '../models/record/record.model';
 import { ISchemaTreeDefinition, SchemaTreeDefinitionModel } from '../models/schema-tree/schema-tree.model';
 import { IWorkflow, IWorkflowPaginationResponse, IWorkflowTask, WorkflowModel } from '../models/workflow/workflow.model';
 
@@ -417,7 +422,7 @@ export class WorkApiRoutesService extends HttpBaseService {
   }
 
   /**
-   * Get a all dashboards
+   * Get all dashboards
    */
   public getDashboards$(): Observable<DashboardModel[]> {
     return this._handleGet$<IDashboard[]>(`/v1/admin/dashboards`).pipe(
@@ -559,6 +564,163 @@ export class WorkApiRoutesService extends HttpBaseService {
           }
         : '',
     );
+  }
+
+  /**
+   * Get record definitions list
+   */
+  public getRecordDefinitionsList$(name?: string, pagingRequestModel?: PagingRequestModel): Observable<ITransactionsPaginationResponse<IRecordDefinition>> {
+    let httpParams = new HttpParams();
+    if (name) {
+      httpParams = httpParams.append('name', name);
+    }
+
+    return this._handleGet$<IRecordsPaginationResponse<IRecordDefinition>>(
+      `/v1/admin/records${pagingRequestModel ? pagingRequestModel.toSchema() : ''}`,
+      name
+        ? {
+            params: httpParams,
+          }
+        : '',
+    ).pipe(
+      map(recordDefinitionSchema => ({
+        items: recordDefinitionSchema.items?.map(recordDefinition => new RecordDefinitionModel(recordDefinition)),
+        pagingMetadata: new PagingResponseModel(recordDefinitionSchema.pagingMetadata),
+      })),
+    );
+  }
+
+  /**
+   * Create a record definition
+   */
+  public createRecordDefinition$(recordDefinitionModel: RecordDefinitionModel): Observable<RecordDefinitionModel> {
+    return this._handlePost$<RecordDefinitionModel>(`/v1/admin/records`, recordDefinitionModel.toSchema()).pipe(
+      map(recordDefinition => new RecordDefinitionModel(recordDefinition)),
+    );
+  }
+
+  /**
+   * Get record definition by key
+   */
+  public getRecordDefinitionByKey$(key: string): Observable<RecordDefinitionModel> {
+    return this._handleGet$<IRecordDefinition>(`/v1/admin/records/${key}`).pipe(map(recordDefinition => new RecordDefinitionModel(recordDefinition)));
+  }
+
+  /**
+   * Update a record definition
+   */
+  public updateRecordDefinition$(key: string, recordDefinitionModel: RecordDefinitionModel): Observable<RecordDefinitionModel> {
+    return this._handlePut$<IRecordDefinition>(`/v1/admin/records/${key}`, recordDefinitionModel.toSchema()).pipe(
+      map(recordDefinition => new RecordDefinitionModel(recordDefinition)),
+    );
+  }
+
+  /**
+   * Get all record lists (hard-coded for now)
+   */
+  public getRecordLists$(): Observable<RecordListModel[]> {
+    return of([
+      new RecordListModel({
+        columns: [
+          {
+            attributePath: 'externalId',
+            columnLabel: 'Rider ID',
+            sortable: true,
+          },
+          {
+            attributePath: 'data.fullName',
+            columnLabel: 'Name',
+            sortable: false,
+          },
+          {
+            attributePath: 'data.email',
+            columnLabel: 'Email',
+            sortable: false,
+          },
+          {
+            attributePath: 'data.phone',
+            columnLabel: 'Phone',
+            sortable: false,
+          },
+          {
+            attributePath: 'data.currentAddress.addressLine1',
+            columnLabel: 'Address',
+            sortable: false,
+          },
+          {
+            attributePath: 'createdTimestamp',
+            columnLabel: 'Intake Date',
+            displayFormat: 'DATETIME',
+            sortable: true,
+          },
+        ],
+        menuIcon: 'dashboard',
+        recordDefinitionKey: 'MTARider',
+        recordListLabel: 'Riders',
+        tabs: [
+          {
+            filter: {
+              status: 'Active',
+            },
+            tabLabel: 'Active',
+          },
+        ],
+      }),
+    ]);
+  }
+
+  /**
+   * Gets counts for each record list
+   */
+  public getRecordListCounts$(recordDefinitionKey: string): Observable<RecordListCountModel[]> {
+    return this._handleGet$<IRecordListCount[]>(`/v1/admin/records/${recordDefinitionKey}/counts`).pipe(
+      map((recordListCountSchemaArray: IRecordListCount[]) => recordListCountSchemaArray.map(schema => new RecordListCountModel(schema))),
+    );
+  }
+
+  /**
+   * Get records
+   */
+  public getRecords$(
+    recordDefinitionKey?: string,
+    status?: string,
+    externalId?: string,
+    pagingRequestModel?: PagingRequestModel,
+  ): Observable<IRecordsPaginationResponse<RecordModel>> {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.append('recordDefinitionKey', recordDefinitionKey ?? '');
+    httpParams = httpParams.append('status', status ?? '');
+    httpParams = httpParams.append('externalId', externalId ?? '');
+
+    return this._handleGet$<IRecordsPaginationResponse<IRecord>>(`/v1/records${pagingRequestModel ? pagingRequestModel.toSchema() : ''}`, {
+      params: httpParams,
+    }).pipe(
+      map(recordsSchema => ({
+        items: recordsSchema.items?.map(recordSchema => new RecordModel(recordSchema)),
+        pagingMetadata: new PagingResponseModel(recordsSchema.pagingMetadata),
+      })),
+    );
+  }
+
+  /**
+   * Create a new record
+   */
+  public createRecord$(recordDefinitionKey: string, transactionId: string): Observable<RecordModel> {
+    return this._handlePost$<IRecord>(`/v1/records`, { recordDefinitionKey, transactionId }).pipe(map(recordSchema => new RecordModel(recordSchema)));
+  }
+
+  /**
+   * Update record by id
+   */
+  public updateRecordById$(recordId: string, record: UpdateRecordOptions): Observable<RecordModel> {
+    return this._handlePut$<IRecord>(`/v1/records/${recordId}`, record).pipe(map(recordSchema => new RecordModel(recordSchema)));
+  }
+
+  /**
+   * Get record by id
+   */
+  public getRecordById$(recordId: string): Observable<RecordModel> {
+    return this._handleGet$<IRecord>(`/v1/records/${recordId}`).pipe(map(recordSchema => new RecordModel(recordSchema)));
   }
 
   /**
