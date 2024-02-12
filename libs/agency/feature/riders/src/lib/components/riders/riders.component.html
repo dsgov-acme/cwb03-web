@@ -1,0 +1,60 @@
+<ng-container *ngIf="riderListDetails$ | async as riderListDetails; else loading">
+  <ng-container *ngIf="riderListDetails.columns.length; else noRiderLists">
+    <h1 class="title">{{recordListLabel}}</h1>
+    <ng-container class="riders-list">
+      <div class="riders-list__actions">
+        <nuverial-text-input
+          ariaLabel="Search riders"
+          [formControl]="searchInput"
+          [suffixIcon]="searchBoxIcon"
+          [type]="'text'"
+          (clickIcon)="clearSearch()"
+          (keyup.enter)="handleSearch()"
+          (keyup)="setSearchBoxIcon()"
+          placeholder="Find by Rider ID"
+          suffixAriaLabel="Search riders"
+        />
+      </div>
+      <div class="riders-list__table">
+        <ng-container *ngIf="tabs.length && tabs.length > 1">
+          <mat-tab-group class="riders-list__table--tabs" [selectedIndex]="activeTabIndex" (selectedTabChange)="switchTabs($event)">
+            <ng-container *ngFor="let tab of tabs; trackBy: trackByFn">
+              <mat-tab [attr.aria-label]="tab.label" [label]="tab.label">
+                <ng-template mat-tab-label>
+                  <div class="riders-list__tab">
+                    {{tab.label | titlecase}}
+                    <ng-container>
+                      <span class="riders-list__tab--badge">{{tab.count}}</span>
+                    </ng-container>
+                  </div>
+                </ng-template>
+              </mat-tab>
+            </ng-container>
+          </mat-tab-group>
+        </ng-container>
+        <nuverial-table
+          ariaLabel="riders list table"
+          [dataSourceTable]="dataSourceTable"
+          [displayedColumns]="displayedColumns"
+          [listIsLoading]="riderListIsLoading"
+          [pagingMetadata]="pagingMetadata"
+          [pagingRequestModel]="pagingRequestModel"
+          [sortDirection]="sortDirection"
+          (clickRow)="navigateToRiderDetails($event.id)"
+          (setPage)="setPage($event)"
+          (sortData)="sortData($event)"
+        ></nuverial-table>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-container>
+<ng-template #loading>
+  <nuverial-spinner></nuverial-spinner>
+</ng-template>
+<ng-template #noRiderLists>
+  <div class="empty-rider-lists">
+    <nuverial-icon [outlined]="true" iconName="file_copy"></nuverial-icon>
+    <p class="rider-lists-container-text">You currently don’t have any configured rider lists.</p>
+    <p class="rider-lists-container-text">Contact a system administrator to a create rider list.</p>
+  </div></ng-template
+>

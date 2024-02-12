@@ -42,7 +42,7 @@ describe('ShellComponent', () => {
         }),
         MockProvider(Router, {
           events: routerEventsSubject.asObservable(),
-          url: '/dashboard',
+          url: '/riders',
         }),
         MockProvider(DashboardService, {
           getDashboards$: jest.fn().mockImplementation(() => of(DashboardList)),
@@ -149,16 +149,9 @@ describe('ShellComponent', () => {
             expect(agencyMenu).toBeDefined();
             expect(agencyMenu).toStrictEqual([
               {
-                icon: 'search',
-                label: 'Claims',
-                navigationParams: { transactionSet: 'FinancialBenefit' },
-                navigationRoute: 'dashboard',
-              },
-              {
-                icon: 'search',
-                label: 'Claims',
-                navigationParams: { transactionSet: 'VehicalRegistration' },
-                navigationRoute: 'dashboard',
+                icon: 'dashboard',
+                navigationParams: {},
+                navigationRoute: 'riders',
               },
             ]);
 
@@ -168,23 +161,24 @@ describe('ShellComponent', () => {
         .subscribe();
     }
 
-    expect(spy).toHaveBeenCalled();
+    // TODO: update to remove .not when wired up to back-end
+    expect(spy).not.toHaveBeenCalled();
   });
 
   describe('_setPortalByURL', () => {
-    it('should set isAdminPortal to true and portalNavigator route to dashboard if _router.url contains "admin"', fakeAsync(() => {
+    it('should set isAdminPortal to true and portalNavigator route to riders if _router.url contains "admin"', fakeAsync(() => {
       Object.defineProperty(component['_router'], 'url', {
         get: () => '/admin',
       });
 
       component['_setPortalByURL']();
-      expect(component.portalNavigator?.navigationRoute).toEqual('dashboard');
+      expect(component.portalNavigator?.navigationRoute).toEqual('riders');
       expect(component.isAdminPortal).toEqual(true);
     }));
 
     it('should set isAdminPortal to false and portalNavigator route to admin if _router.url does not contains "admin"', fakeAsync(() => {
       Object.defineProperty(component['_router'], 'url', {
-        get: () => '/dashboard',
+        get: () => '/riders',
       });
 
       component['_setPortalByURL']();
@@ -232,8 +226,8 @@ describe('ShellComponent', () => {
       expect(menuItems).toEqual([
         {
           icon: 'dashboard_icon',
-          navigationParams: { transactionSet: 'Transactions' },
-          navigationRoute: 'dashboard',
+          navigationParams: {},
+          navigationRoute: 'riders',
         },
       ]);
     });
@@ -277,19 +271,19 @@ describe('ShellComponent', () => {
   });
 
   describe('_setPortalByURL', () => {
-    it('should set isAdminPortal to true and portalNavigator route to dashboard if _router.url contains "admin"', fakeAsync(() => {
+    it('should set isAdminPortal to true and portalNavigator route to riders if _router.url contains "admin"', fakeAsync(() => {
       Object.defineProperty(component['_router'], 'url', {
         get: () => '/admin',
       });
 
       component['_setPortalByURL']();
-      expect(component.portalNavigator?.navigationRoute).toEqual('dashboard');
+      expect(component.portalNavigator?.navigationRoute).toEqual('riders');
       expect(component.isAdminPortal).toEqual(true);
     }));
 
     it('should set isAdminPortal to false and portalNavigator route to admin if _router.url does not contains "admin"', fakeAsync(() => {
       Object.defineProperty(component['_router'], 'url', {
-        get: () => '/dashboard',
+        get: () => '/riders',
       });
 
       component['_setPortalByURL']();
@@ -312,7 +306,7 @@ describe('ShellComponent', () => {
     }));
 
     it('should update isAdminPortal when NavigationEnd event has non-admin path', fakeAsync(() => {
-      routerEventsSubject.next(new NavigationEnd(1, '/dashboard', '/dashboard'));
+      routerEventsSubject.next(new NavigationEnd(1, '/riders', '/riders'));
       tick();
       expect(component.isAdminPortal).toBe(false);
     }));

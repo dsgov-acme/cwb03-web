@@ -20,7 +20,7 @@ const _environment: IEnvironment<Partial<FeatureFlags>> = {
   },
   featureFlags: {},
   httpConfiguration: {
-    baseUrl: 'https://api-dev.dsgov.demo.nuvalence.io',
+    baseUrl: 'https://api-dev.cwb03.dsgov.demo.nuvalence.io',
   },
 };
 

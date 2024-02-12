@@ -20,7 +20,7 @@ const _environment: IEnvironment<Partial<FeatureFlags>> = {
   },
   featureFlags: {},
   httpConfiguration: {
-    baseUrl: 'http://api.dsgov.test',
+    baseUrl: 'http://api.cwb03.test',
   },
 };
 

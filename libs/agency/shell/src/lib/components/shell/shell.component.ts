@@ -21,7 +21,7 @@ import {
   NuverialSpinnerComponent,
 } from '@dsg/shared/ui/nuverial';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, of } from 'rxjs';
 import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 
 @UntilDestroy()
@@ -103,13 +103,23 @@ export class ShellComponent implements OnInit {
   public ngOnInit() {
     this.agencySideNavMenuItems$ = this._authenticationService.isAuthenticated$.pipe(
       filter(authenticated => authenticated),
-      switchMap(() => combineLatest([this._dashboardService.getDashboards$(), this._userStateService.initializeUsersCache$()])),
+      switchMap(() =>
+        combineLatest([
+          of([
+            {
+              menuIcon: 'dashboard',
+              navigationParams: {},
+              navigationRoute: 'riders',
+            },
+          ]),
+          this._userStateService.initializeUsersCache$(),
+        ]),
+      ),
       map(([dashboards]) =>
-        dashboards.map(({ menuIcon, transactionSet, dashboardLabel }) => ({
+        dashboards.map(({ menuIcon, navigationParams, navigationRoute }) => ({
           icon: menuIcon,
-          label: dashboardLabel,
-          navigationParams: { transactionSet },
-          navigationRoute: 'dashboard',
+          navigationParams,
+          navigationRoute,
         })),
       ),
       untilDestroyed(this),
@@ -158,7 +168,7 @@ export class ShellComponent implements OnInit {
     this.portalNavigator = {
       icon: 'admin_panel_settings',
       label: 'Toggle Admin Portal',
-      navigationRoute: this.isAdminPortal ? 'dashboard' : 'admin',
+      navigationRoute: this.isAdminPortal ? 'riders' : 'admin',
     };
   }
 }

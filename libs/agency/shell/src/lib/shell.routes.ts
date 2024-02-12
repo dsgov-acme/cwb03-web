@@ -27,7 +27,7 @@ export const agencyShellRoutes: Route[] = [
           {
             path: '',
             pathMatch: 'full',
-            redirectTo: 'dashboard',
+            redirectTo: 'riders',
           },
           {
             loadChildren: () => import('@dsg/agency/feature/dashboard').then(module => module.AgencyFeatureDashboardModule),
@@ -36,6 +36,10 @@ export const agencyShellRoutes: Route[] = [
           {
             loadChildren: () => import('@dsg/agency/feature/admin').then(module => module.AgencyFeatureAdminModule),
             path: 'admin',
+          },
+          {
+            loadChildren: () => import('@dsg/agency/feature/riders').then(module => module.AgencyFeatureRidersModule),
+            path: 'riders',
           },
         ],
         path: '',
@@ -55,6 +59,6 @@ export const agencyShellRoutes: Route[] = [
   },
   {
     path: '**',
-    redirectTo: 'dashboard',
+    redirectTo: 'riders',
   },
 ];
