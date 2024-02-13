@@ -11,7 +11,7 @@ const _environment: IEnvironment<Partial<FeatureFlags>> = {
         authDomain: 'dsgov-dev.firebaseapp.com',
       },
       providerId: 'oidc.public',
-      tenantId: 'public-portal-a2kyb',
+      tenantId: 'agency-portal-ug493',
     },
     sessionExpiration: {
       idleTimeSeconds: 60 * 30,
