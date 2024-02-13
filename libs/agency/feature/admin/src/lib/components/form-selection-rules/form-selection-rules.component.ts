@@ -21,7 +21,7 @@ import {
 } from '@dsg/shared/ui/nuverial';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Validators } from 'ngx-editor';
-import { catchError, combineLatest, map, Observable, of, tap } from 'rxjs';
+import { Observable, catchError, combineLatest, map, of, tap } from 'rxjs';
 import { FormConfigurationService } from '../form-configurations/form-configurations.service';
 
 export interface FormSelectionRuleTableData extends IFormSelectionRule {

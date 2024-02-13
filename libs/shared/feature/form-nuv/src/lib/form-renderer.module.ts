@@ -8,6 +8,8 @@ import { FormlyAddressComponent } from './components/advanced/address';
 import { FormlyFileUploadComponent, FormlyFileUploaderComponent, FormlyMultipleFileUploadComponent } from './components/advanced/file-upload';
 import { FormlyFormListComponent } from './components/advanced/form-list/formly/formly-form-list.component';
 import { FormlyLogicValidatorComponent } from './components/advanced/logic-validator';
+import { FormlySelectPromiseTimeComponent } from './components/advanced/select-promise-time';
+import { FormlySelectSavedLocationComponent } from './components/advanced/select-saved-location';
 import { FormlyCheckboxComponent } from './components/checkbox';
 import { FormlyCheckboxCardComponent } from './components/checkbox-card';
 import { FormlyDatePickerComponent } from './components/date-picker';
@@ -40,6 +42,8 @@ import { FormlyTextInputComponent } from './components/text-input';
         { component: FormlyFormListComponent, name: 'nuverialFormList' },
         { component: FormlySectionHeaderComponent, name: 'nuverialSectionHeader' },
         { component: FormlySelectComponent, name: 'nuverialSelect' },
+        { component: FormlySelectSavedLocationComponent, name: 'nuverialSelectSavedLocation' },
+        { component: FormlySelectPromiseTimeComponent, name: 'nuverialSelectPromiseTime' },
         { component: FormlySimpleChoiceQuestionsComponent, name: 'nuverialRadioCards' },
         { component: FormlyStepsComponent, name: 'nuverialSteps' },
         { component: FormlyTextAreaComponent, name: 'nuverialTextArea' },

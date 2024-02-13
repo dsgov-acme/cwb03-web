@@ -62,6 +62,10 @@ export class WorkApiRoutesService extends HttpBaseService {
     super(_http, `${_environment.httpConfiguration.baseUrl}/wm/api`, _loggingService);
   }
 
+  // public getSavedLocationsByUserId$(userId: string): Observable<MTALocation[]> {
+  //   return this._handleGet$<MTALocation[]>(`/v1/${userId}`);
+  // }
+
   /**
    * Update a form data schema definition
    */

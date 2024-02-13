@@ -1,0 +1,31 @@
+<ng-container [ngSwitch]="mode">
+  <ng-container *ngSwitchCase="'edit'" [ngTemplateOutlet]="editTemplate"></ng-container>
+  <ng-container *ngSwitchCase="'review'" [ngTemplateOutlet]="reviewTemplate"></ng-container>
+  <ng-container *ngSwitchDefault>{{mode}} mode not implemented</ng-container>
+</ng-container>
+
+<ng-template #editTemplate>
+  <nuverial-select
+    [ariaDescribedBy]="props.ariaDescribedBy"
+    [ariaLabel]="props.ariaLabel"
+    [formControl]="formControl"
+    [label]="props.label"
+    [placeholder]="props.placeholder || ''"
+    [required]="props.required || false"
+    [selectOptions]="(selectOptions$ | async) || []"
+    [validationMessages]="props.validationMessages"
+  >
+  </nuverial-select>
+</ng-template>
+
+<ng-template #reviewTemplate>
+  <div *ngIf="reviewDetails as details">
+    <div class="field-label">{{ details.name }}</div>
+    <div class="field-value">{{details.address?.address1}}</div>
+    <div class="field-value">{{details.address?.address2}}</div>
+    <div class="field-value">
+      {{reviewDetails.address?.city}}, {{details.address?.stateCode}} {{details.address?.postalCode}}{{details.address?.postalCodeExtension && '-' +
+      details.address?.postalCodeExtension}} {{ details.address?.countryCode}}
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,11 @@
+<nuverial-select
+  [ariaDescribedBy]="props.ariaDescribedBy"
+  [ariaLabel]="props.ariaLabel"
+  [formControl]="formControl"
+  [label]="props.label || ''"
+  [placeholder]="props.placeholder || ''"
+  [required]="props.required!"
+  [selectOptions]="(selectOptions$ | async) || []"
+  [validationMessages]="props.validationMessages"
+>
+</nuverial-select>

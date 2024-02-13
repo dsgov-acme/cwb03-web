@@ -1,0 +1,22 @@
+<ng-container [ngSwitch]="mode">
+  <ng-container *ngSwitchCase="'edit'" [ngTemplateOutlet]="editTemplate"></ng-container>
+  <ng-container *ngSwitchCase="'review'" [ngTemplateOutlet]="reviewTemplate"></ng-container>
+  <ng-container *ngSwitchDefault>{{mode}} mode not implemented</ng-container>
+</ng-container>
+
+<ng-template #editTemplate>
+  <nuverial-radio-cards
+    [columns]="props.cols"
+    [formControl]="formControl"
+    [legend]="props.label"
+    [radioCards]="(selectOptions$ | async) || []"
+    [required]="props.required!"
+  />
+</ng-template>
+
+<ng-template #reviewTemplate>
+  <div *ngIf="reviewDetails as details">
+    <div class="field-label">{{ props.label }}:</div>
+    <div class="field-value">{{ details.time }}</div>
+  </div>
+</ng-template>

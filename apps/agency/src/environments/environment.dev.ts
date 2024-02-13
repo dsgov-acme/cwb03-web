@@ -7,12 +7,12 @@ const _environment: IEnvironment<Partial<FeatureFlags>> = {
   authenticationConfiguration: {
     firebaseConfiguration: {
       firebase: {
-        apiKey: 'AIzaSyBb5I7J5yd_e0vL0iuiPrlykv-WQMtgAbw',
-        authDomain: 'dsgov-dev.firebaseapp.com',
+        apiKey: 'AIzaSyAKsXCEYvBVgfTITzK6wJE01RznBcrMfD8',
+        authDomain: 'cwb03-dev.firebaseapp.com',
       },
       providerFlow: 'redirect',
       providerId: 'oidc.agency',
-      tenantId: 'agency-portal-ug493',
+      tenantId: 'agency-portal-p0lpq',
     },
     sessionExpiration: {
       idleTimeSeconds: 60 * 30,
