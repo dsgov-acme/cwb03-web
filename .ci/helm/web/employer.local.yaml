@@ -6,14 +6,14 @@ firebase:
 
 environmentJSON: {
   authenticationConfiguration: {
-    firebaseConfiguration: {
+    firebaseConfiguration: { 
       firebase: {
-        apiKey: "AIzaSyAKsXCEYvBVgfTITzK6wJE01RznBcrMfD8",
-        authDomain: "cwb03-dev.firebaseapp.com",
+        apiKey: 'AIzaSyBb5I7J5yd_e0vL0iuiPrlykv-WQMtgAbw',
+        authDomain: 'dsgov-dev.firebaseapp.com',
       },
       providerFlow: 'redirect',
       providerId: 'oidc.public',
-      tenantId: 'employer-portal-onkhp',
+      tenantId: 'agency-portal-ug493',
     },
   },
   googlePlacesApiConfiguration: {
