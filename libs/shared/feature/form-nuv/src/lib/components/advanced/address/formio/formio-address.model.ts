@@ -84,6 +84,14 @@ const schema = {
         selectOptions: COUNTRY_OPTIONS,
       },
     },
+    {
+      input: true,
+      props: {
+        componentId: 'gbpPlacesId',
+        hidden: true,
+        label: 'Place ID',
+      },
+    },
   ],
   key: 'address',
 };

@@ -207,6 +207,10 @@ export const defaultAutoCompleteConfiguration = {
   data: {
     values: [
       {
+        label: 'PlaceID',
+        value: 'gbpPlaceId',
+      },
+      {
         label: 'Country',
         value: 'country',
       },

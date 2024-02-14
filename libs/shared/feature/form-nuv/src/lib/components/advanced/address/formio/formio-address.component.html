@@ -32,6 +32,9 @@
       <ng-container *ngSwitchCase="'countryCode'">
         <ng-container *ngTemplateOutlet="selectTemplate; context: { component, form: addressForm, name: 'countryCode' }"></ng-container>
       </ng-container>
+      <ng-container *ngSwitchCase="'gbpPlacesId'">
+        <ng-container *ngTemplateOutlet="textInputTemplate; context: { component, form: addressForm, name: 'gbpPlacesId' }"></ng-container>
+      </ng-container>
     </ng-container>
 
     <ng-template #textInputTemplate let-class="class" let-component="component" let-form="form" let-name="name">
