@@ -76,6 +76,8 @@ export class FormlyAddressComponent extends FormlyBaseComponent<FormlyAddressFie
       return this._processAddressField(_field, undefined, 'flex-quarter');
     } else if (componentId === 'countryCode') {
       return this._processAddressField(_field, 'address-line2');
+    } else if (componentId === 'gbpPlacesId') {
+      return this._processAddressField(_field, 'gbpPlacesId');
     } else {
       return _field;
     }

@@ -29,6 +29,7 @@ export class FormioAddressComponent extends FormioBaseCustomComponent<string, Fo
     addressLine2: new FormControl(''),
     city: new FormControl(''),
     countryCode: new FormControl(''),
+    gbpPlacesId: new FormControl(''),
     postalCode: new FormControl(''),
     postalCodeExtension: new FormControl(''),
     stateCode: new FormControl(''),
