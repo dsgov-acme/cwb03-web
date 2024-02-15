@@ -5,12 +5,37 @@ export const agencyFeatureRiderRoutes: Route[] = [
     loadComponent: () => import('./components/riders').then(module => module.RidersComponent),
     path: '',
   },
-  // {
-  //   children: [
-  //     { path: '**', redirectTo: 'detail' }
-  //   ],
-  //   loadComponent: () => import('./components/rider-detail').then(module => module.RiderDetailComponent),
-  //   path: 'rider/:recordId',
-  // },
+  {
+    children: [
+      {
+        data: { activeTab: 'detail' },
+        loadComponent: () => import('@dsg/shared/feature/riders').then(module => module.RiderDetailsComponent),
+        path: 'detail',
+      },
+      {
+        data: { activeTab: 'rides' },
+        loadComponent: () => import('@dsg/shared/feature/riders').then(module => module.RiderRidesComponent),
+        path: 'rides',
+      },
+      {
+        data: { activeTab: 'locations' },
+        loadComponent: () => import('@dsg/shared/feature/riders').then(module => module.RiderSavedLocationsComponent),
+        path: 'locations',
+      },
+      {
+        data: { activeTab: 'payments' },
+        loadComponent: () => import('@dsg/shared/feature/riders').then(module => module.RiderPaymentsComponent),
+        path: 'payments',
+      },
+      {
+        data: { activeTab: 'communication' },
+        loadComponent: () => import('@dsg/shared/feature/riders').then(module => module.RiderCommunicationLogComponent),
+        path: 'communication',
+      },
+      { path: '**', redirectTo: 'detail' },
+    ],
+    loadComponent: () => import('./components/rider-profile').then(module => module.RiderProfileComponent),
+    path: ':recordId',
+  },
   { path: '**', redirectTo: '' },
 ];

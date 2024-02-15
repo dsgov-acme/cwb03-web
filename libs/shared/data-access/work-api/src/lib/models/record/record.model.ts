@@ -29,7 +29,7 @@ export interface RecordTableData {
 export interface RecordData {
   [key: string]: unknown;
   /* Put strongly-typed data in here */
-  test?: string;
+  fullName?: string;
 }
 
 export interface IRecordsPaginationResponse<T> extends IPaginationResponse {

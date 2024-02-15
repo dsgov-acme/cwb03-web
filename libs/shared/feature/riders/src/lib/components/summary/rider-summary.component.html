@@ -1,0 +1,94 @@
+<ng-container *ngIf="rider?.id; then content else getRider"> </ng-container>
+
+<ng-template #getRider>
+  <ng-container *ngIf="rider$ | async; then content else loading"> </ng-container>
+</ng-template>
+
+<ng-template #content>
+  <h1 class="user-name main-item">{{riderModel.data['fullName']}}</h1>
+  <div class="pill-container main-item">
+    <nuverial-pill>Eligible</nuverial-pill>
+  </div>
+  <div class="rider-id summary-item">
+    <span>
+      <nuverial-icon iconName="perm_contact_calendar_outline"></nuverial-icon>
+      <b>{{riderModel.externalId}}</b>
+    </span>
+  </div>
+  <div class="phone summary-item">
+    <span>
+      <nuverial-icon iconName="call_outline"></nuverial-icon>
+      <b>{{riderModel.data['phone']}}</b>
+    </span>
+  </div>
+  <div class="language summary-item">
+    <span>
+      <nuverial-icon iconName="language_outline"></nuverial-icon>
+      <b>English</b>
+    </span>
+  </div>
+  <div class="demographic summary-item additional-info-panel">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <span>
+            <nuverial-icon iconName="demography_outline"></nuverial-icon>
+            Demographic
+          </span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="additional-info-panel-group">
+        <span class="additional-info-panel-group-icon">
+          <nuverial-icon iconName="stethoscope_outline"></nuverial-icon>
+        </span>
+        <div>Epilepsy</div>
+        <div>Orthopedic</div>
+        <div>Vision</div>
+      </div>
+      <div class="additional-info-panel-group">
+        <span class="additional-info-panel-group-icon">
+          <nuverial-icon iconName="wheelchair_pickup_outline"></nuverial-icon>
+        </span>
+        <div>Walker</div>
+        <div>Support Cane</div>
+        <div>Power Wheelchair</div>
+      </div>
+      <div class="additional-info-panel-group">
+        <span class="additional-info-panel-group-icon">
+          <nuverial-icon iconName="groups_outline"></nuverial-icon>
+        </span>
+        <div>Personal Care Attendant</div>
+      </div>
+      <div class="additional-info-panel-group">
+        <span class="additional-info-panel-group-icon">
+          <nuverial-icon iconName="sound_detection_dog_barking_outline"></nuverial-icon>
+        </span>
+        <div>Service Animal</div>
+      </div>
+    </mat-expansion-panel>
+  </div>
+  <div class="emergency-contact summary-item additional-info-panel">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <span>
+            <nuverial-icon iconName="contact_emergency_outline"></nuverial-icon>
+            Emergency Contact
+          </span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="additional-info-panel-group">
+        <span class="additional-info-panel-group-icon">
+          <nuverial-icon iconName="person_outline"></nuverial-icon>
+        </span>
+        <div>August Hansen</div>
+        <div>Father</div>
+        <div>(917) 712-3232</div>
+      </div>
+    </mat-expansion-panel>
+  </div>
+</ng-template>
+
+<ng-template #loading>
+  <nuverial-spinner></nuverial-spinner>
+</ng-template>
