@@ -34,6 +34,7 @@
       "@dsg/shared/feature/events": ["libs/shared/feature/events/src/index.ts"],
       "@dsg/shared/feature/form-nuv": ["libs/shared/feature/form-nuv/src/index.ts"],
       "@dsg/shared/feature/messaging": ["libs/shared/feature/messaging/src/index.ts"],
+      "@dsg/shared/feature/riders": ["libs/shared/feature/riders/src/index.ts"],
       "@dsg/shared/feature/schema-nuv": ["libs/shared/feature/schema-nuv/src/index.ts"],
       "@dsg/shared/ui/nuverial": ["libs/shared/ui/nuverial/src/index.ts"],
       "@dsg/shared/utils/access-control": ["libs/shared/utils/access-control/src/index.ts"],

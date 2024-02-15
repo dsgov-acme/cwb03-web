@@ -1,0 +1,87 @@
+@use '@dsg/shared-theme/partials/functions/rem';
+@use '@dsg/shared-theme/partials/mixins' as mixins;
+
+:host {
+  & > .main-item {
+    padding-bottom: rem.fromPx(20px);
+  }
+
+  .pill-container {
+    ::ng-deep .nuverial-pill {
+      font-weight: var(--theme-typography-font-weight-bold);
+      letter-spacing: rem.fromPx(0.5px);
+    }
+  }
+
+  & > .summary-item {
+    span,
+    a {
+      display: flex;
+      gap: 0.3rem;
+      align-items: center;
+    }
+    padding-bottom: rem.fromPx(10px);
+
+    ::ng-deep {
+      .nuverial-icon {
+        --nuverial-icon-size: 1rem;
+      }
+    }
+  }
+
+  .additional-info-panel {
+    padding-bottom: 0;
+    // --mat-expansion-header-collapsed-state-height: rem.fromPx(24px);
+    // --mat-expansion-header-expanded-state-height: rem.fromPx(24px);
+    // --nuverial-accordion-expansion-indicator-color: var(--theme-color-tertiary);
+    --nuverial-accordion-expansion-indicator-color: var(--theme-color-primary);
+
+    display: block;
+
+    .mat-expansion-panel {
+      margin-bottom: 8px !important;
+      box-shadow: none;
+      border-width: 0;
+
+      & > .mat-expansion-panel-header:hover {
+        background-color: var(--mat-expansion-container-background-color);
+      }
+
+      .mat-expansion-panel-header-title {
+        font-size: var(--theme-typography-font-size-normal);
+      }
+    }
+
+    ::ng-deep .mat-expansion-panel-header {
+      padding: 0;
+      --mat-expansion-header-collapsed-state-height: rem.fromPx(26px);
+      --mat-expansion-header-expanded-state-height: rem.fromPx(39px);
+    }
+
+    ::ng-deep .mat-expansion-panel-body {
+      padding: rem.fromPx(10px) 0 rem.fromPx(10px) rem.fromPx(20px);
+      .additional-info-panel-group {
+        margin-bottom: rem.fromPx(10px);
+        padding-left: rem.fromPx(21px);
+      }
+
+      .additional-info-panel-group-icon {
+        float: left;
+        margin-left: rem.fromPx(-21px);
+      }
+    }
+
+    ::ng-deep .mat-expansion-panel-header-title {
+      font-weight: var(--theme-typography-font-weight-bold);
+    }
+
+    ::ng-deep .mat-expansion-indicator {
+      padding: 0 rem.fromPx(5px);
+
+      &:after {
+        color: var(--nuverial-accordion-expansion-indicator-color);
+        padding: 0.25rem;
+      }
+    }
+  }
+}

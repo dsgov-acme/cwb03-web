@@ -53,10 +53,11 @@ import { RidersService } from './riders.service';
   templateUrl: './riders.component.html',
 })
 export class RidersComponent implements OnDestroy {
+  @ViewChild(MatSort) public tableSort!: MatSort;
+
   public displayedColumns: IDisplayedColumn[] = [];
   public priorityVisuals = PriorityVisuals;
   public tabs: INuverialTab[] = [];
-  private _tabsCopy = '';
   public activeTabIndex = 0;
   public riders: IRecord[] = [];
   public riderListIsLoading = false;
@@ -70,8 +71,6 @@ export class RidersComponent implements OnDestroy {
   public recordDefinitionKey = '';
   public recordListLabel = '';
   public readonly pagingRequestModel: PagingRequestModel = new PagingRequestModel({}, this._router, this._activatedRoute);
-
-  @ViewChild(MatSort) public tableSort!: MatSort;
 
   public riderListDetails$ = this._recordListService.loadRecordLists$().pipe(
     switchMap(recordList => {
@@ -136,6 +135,8 @@ export class RidersComponent implements OnDestroy {
       return of({ columns: [], tabs: [] });
     }),
   );
+
+  private _tabsCopy = '';
 
   constructor(
     private readonly _workApiRoutesService: WorkApiRoutesService,
@@ -264,6 +265,38 @@ export class RidersComponent implements OnDestroy {
     this.getRidersList();
   }
 
+  public trackByFn(index: number): number {
+    return index;
+  }
+
+  public updateTabCounts(key: string): Observable<RecordListCountModel[]> {
+    return this._recordListService.getRecordListTabCount$(key).pipe(
+      tap((counts: DashboardCountModel[]) => {
+        this.recordListCounts = counts;
+      }),
+      catchError(() => {
+        this._nuverialSnackBarService.notifyApplicationError();
+
+        return of([]);
+      }),
+    );
+  }
+
+  public getCountByTabLabel(tabLabel: string): number {
+    const recordListCount = this.recordListCounts.find(count => count.tabLabel === tabLabel);
+
+    return recordListCount ? recordListCount.count : 0;
+  }
+
+  public handleSearch() {
+    this.pagingRequestModel.pageNumber = 0;
+    this.getRidersList();
+  }
+
+  public ngOnDestroy(): void {
+    this._recordListService.cleanUp();
+  }
+
   private async _buildDataSourceTable(): Promise<void> {
     const recordTableData = [];
     for (const record of this.riders) {
@@ -294,10 +327,6 @@ export class RidersComponent implements OnDestroy {
     this.sortDirection = this.pagingRequestModel.sortOrder.toLowerCase() as SortDirection;
   }
 
-  public trackByFn(index: number): number {
-    return index;
-  }
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private _getPropertyValueByPath(object: IRecord, path: string): any {
     const pathArray = path.split('.');
@@ -322,33 +351,5 @@ export class RidersComponent implements OnDestroy {
     if (activeTab) {
       this.activeTabIndex = this.tabs.indexOf(activeTab);
     }
-  }
-
-  public updateTabCounts(key: string): Observable<RecordListCountModel[]> {
-    return this._recordListService.getRecordListTabCount$(key).pipe(
-      tap((counts: DashboardCountModel[]) => {
-        this.recordListCounts = counts;
-      }),
-      catchError(() => {
-        this._nuverialSnackBarService.notifyApplicationError();
-
-        return of([]);
-      }),
-    );
-  }
-
-  public getCountByTabLabel(tabLabel: string): number {
-    const recordListCount = this.recordListCounts.find(count => count.tabLabel === tabLabel);
-
-    return recordListCount ? recordListCount.count : 0;
-  }
-
-  public handleSearch() {
-    this.pagingRequestModel.pageNumber = 0;
-    this.getRidersList();
-  }
-
-  public ngOnDestroy(): void {
-    this._recordListService.cleanUp();
   }
 }
