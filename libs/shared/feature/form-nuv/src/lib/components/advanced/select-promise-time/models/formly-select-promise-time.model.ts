@@ -6,9 +6,3 @@ export interface CardsFieldProperties extends BaseAdvancedFormlyFieldProperties 
   answers?: INuverialRadioCard[];
   formErrorLabel?: string;
 }
-
-export interface PromiseTime {
-  id?: string;
-  time?: string; // todo
-  anchor?: string;
-}
