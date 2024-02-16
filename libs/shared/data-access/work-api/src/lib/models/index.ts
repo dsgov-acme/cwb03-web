@@ -18,6 +18,7 @@ export * from './form-metadata/form-metadata.mock';
 export * from './form-metadata/form-metadata.model';
 export * from './form/form.mock';
 export * from './form/form.model';
+export * from './mta/mta.models';
 export * from './note/note.mock';
 export * from './note/note.model';
 export * from './process-documents/process-documents.mock';

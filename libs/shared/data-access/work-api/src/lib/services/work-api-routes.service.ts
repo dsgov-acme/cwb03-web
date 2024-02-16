@@ -42,6 +42,7 @@ import {
 import { DashboardCountModel, IDashboardCount } from '../models/dashboard/dashboard-count.model';
 import { DashboardModel, IDashboard } from '../models/dashboard/dashboard.model';
 import { EmployerProfileLink, IEmployerProfileLink } from '../models/employer-profile/employer-profile-link.model';
+import { PromiseTimeRequest, PromiseTimeResponse } from '../models/mta/mta.models';
 import { IRecordDefinition, RecordDefinitionModel } from '../models/record-definition/record-definition.model';
 import { IRecord, IRecordsPaginationResponse, RecordModel, UpdateRecordOptions } from '../models/record/record.model';
 import { ISchemaTreeDefinition, SchemaTreeDefinitionModel } from '../models/schema-tree/schema-tree.model';
@@ -60,6 +61,10 @@ export class WorkApiRoutesService extends HttpBaseService {
     protected override readonly _loggingService: LoggingService,
   ) {
     super(_http, `${_environment.httpConfiguration.baseUrl}/wm/api`, _loggingService);
+  }
+
+  public getPromiseTimes$(promiseTimeRequest: PromiseTimeRequest): Observable<PromiseTimeResponse> {
+    return this._handlePost$<PromiseTimeResponse>(`/v1/ride-request/promise-times`, promiseTimeRequest);
   }
 
   // public getSavedLocationsByUserId$(userId: string): Observable<MTALocation[]> {
