@@ -45,6 +45,7 @@
     "@angular/router": "16.2.12",
     "@dsg/shared-theme": "link:libs/shared/ui/theme",
     "@formio/angular": "^6.0.0",
+    "@googlemaps/js-api-loader": "^1.16.2",
     "@ngneat/until-destroy": "^9.2.3",
     "@ngx-formly/core": "6.1.8",
     "@ngx-formly/material": "6.1.8",

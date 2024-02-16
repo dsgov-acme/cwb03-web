@@ -468,33 +468,31 @@ describe('FormlyAddressComponent', () => {
 
   describe('_populateAddressLine1', () => {
     it('should populate address line 1 field with Google address if addressValidationEnabled is true', async () => {
-      const field: FormlyFieldConfig<FormlyAddressFieldProperties> = {
-        key: 'personalInformation.currentAddress.addressLine1',
+      const parentField: FormlyFieldConfig<FormlyAddressFieldProperties> = {
+        key: 'personalInformation.currentAddress',
         props: {
-          componentId: 'addressLine1',
-          label: 'Address Line 1',
           addressValidationEnabled: true,
+          label: 'Current Address',
         },
+        type: 'nuverialAddress',
       };
 
       const mockGooglePlace: GooglePlace = new GooglePlace({
         streetNumber: '1234 First St',
       });
 
-      const _field: FormlyFieldConfig = {
-        className: 'flex-full',
+      const childField: FormlyFieldConfig = {
         props: {
           autocomplete: 'address-line1',
           type: 'text',
         },
-        type: 'nuverialTextInput',
       };
 
       const expectedField: FormlyFieldConfig = {
-        ..._field,
+        ...childField,
         className: 'flex-half',
         props: {
-          ..._field.props,
+          ...childField.props,
           autocomplete: 'address-line1',
           gotGoogleAddress: expect.any(Function),
           type: 'text',
@@ -503,7 +501,7 @@ describe('FormlyAddressComponent', () => {
       };
 
       const { component } = await getFixtureByTemplate();
-      const result = component['_populateAddressLine1'](_field, field);
+      const result = component['_populateAddressLine1'](parentField, childField);
 
       expect(result).toEqual(expectedField);
 
@@ -526,7 +524,7 @@ describe('FormlyAddressComponent', () => {
         formControl: new FormControl(),
       };
 
-      field.fieldGroup = [formField1, formField2];
+      parentField.fieldGroup = [formField1, formField2];
 
       // Call the gotGoogleAddress callback
       gotGoogleAddress?.(mockGooglePlace);
@@ -537,29 +535,29 @@ describe('FormlyAddressComponent', () => {
     });
 
     it('should not populate address line 1 field with Google address if addressValidationEnabled is false', async () => {
-      const field: FormlyFieldConfig<FormlyAddressFieldProperties> = {
+      const addressField: FormlyFieldConfig = {
         key: 'personalInformation.currentAddress.addressLine1',
         props: {
           componentId: 'addressLine1',
           label: 'Address Line 1',
-          addressValidationEnabled: false,
+          required: true,
         },
       };
 
-      const _field: FormlyFieldConfig = {
-        className: 'flex-full',
+      const parentField: FormlyFieldConfig<FormlyAddressFieldProperties> = {
+        fieldGroup: [addressField],
+        key: 'personalInformation.currentAddress',
         props: {
-          autocomplete: 'address-line1',
-          type: 'text',
+          label: 'Current Address',
         },
-        type: 'nuverialTextInput',
+        type: 'nuverialAddress',
       };
 
       const expectedField: FormlyFieldConfig = {
-        ..._field,
+        ...addressField,
         className: 'flex-half',
         props: {
-          ..._field.props,
+          ...addressField.props,
           autocomplete: 'address-line1',
           type: 'text',
         },
@@ -567,7 +565,7 @@ describe('FormlyAddressComponent', () => {
       };
 
       const { component } = await getFixtureByTemplate();
-      const result = component['_populateAddressLine1'](_field, field);
+      const result = component['_populateAddressLine1'](parentField, addressField);
 
       expect(result).toEqual(expectedField);
     });
@@ -641,5 +639,162 @@ describe('FormlyAddressComponent', () => {
     expect(fieldGroup[4].formControl?.value).toEqual('55555');
     expect(fieldGroup[5].formControl?.value).toEqual('1234');
     expect(fieldGroup[6].formControl?.value).toEqual('US');
+  });
+
+  describe('_populateAddressConfiguration', () => {
+    it('should populate address line 1 field', async () => {
+      const { component } = await getFixtureByTemplate();
+      const parentField: FormlyFieldConfig<FormlyAddressFieldProperties> = { key: 'personalInformation.currentAddress' };
+      const childField: FormlyFieldConfig = { props: { componentId: 'addressLine1' } };
+
+      const result = component['_populateAddressConfiguration'](parentField, childField);
+      expect(result).toEqual({
+        props: {
+          componentId: 'addressLine1',
+          autocomplete: 'address-line1',
+          type: 'text',
+        },
+        className: 'flex-half',
+        type: 'nuverialTextInput',
+      });
+    });
+
+    it('should populate address line 1 field to google maps autocomplete', async () => {
+      const { component } = await getFixtureByTemplate();
+      const parentField: FormlyFieldConfig<FormlyAddressFieldProperties> = {
+        key: 'personalInformation.currentAddress',
+        props: { addressValidationEnabled: true },
+      };
+      const childField: FormlyFieldConfig = { props: { componentId: 'addressLine1' } };
+      const result = component['_populateAddressConfiguration'](parentField, childField);
+
+      expect(result).toEqual({
+        props: {
+          componentId: 'addressLine1',
+          autocomplete: 'address-line1',
+          type: 'text',
+          gotGoogleAddress: expect.any(Function),
+        },
+        className: 'flex-half',
+        type: 'nuverialGoogleMapsAutocomplete',
+      });
+    });
+
+    it('should populate address line 2 field', async () => {
+      const { component } = await getFixtureByTemplate();
+      const parentField: FormlyFieldConfig<FormlyAddressFieldProperties> = { key: 'personalInformation.currentAddress' };
+      const childField: FormlyFieldConfig = { props: { componentId: 'addressLine2' } };
+
+      const result = component['_populateAddressConfiguration'](parentField, childField);
+
+      expect(result).toEqual({
+        props: {
+          componentId: 'addressLine2',
+          autocomplete: 'address-line2',
+          type: 'text',
+        },
+        className: 'flex-half',
+        type: 'nuverialTextInput',
+      });
+    });
+
+    it('should populate city field', async () => {
+      const { component } = await getFixtureByTemplate();
+      const parentField: FormlyFieldConfig<FormlyAddressFieldProperties> = { key: 'personalInformation.currentAddress' };
+      const childField: FormlyFieldConfig = { props: { componentId: 'city' } };
+
+      const result = component['_populateAddressConfiguration'](parentField, childField);
+
+      expect(result).toEqual({
+        props: {
+          componentId: 'city',
+          autocomplete: 'address-level2',
+          type: 'text',
+        },
+        className: 'flex-half',
+        type: 'nuverialTextInput',
+      });
+    });
+
+    it('should populate state code field', async () => {
+      const { component } = await getFixtureByTemplate();
+      const parentField: FormlyFieldConfig<FormlyAddressFieldProperties> = { key: 'personalInformation.currentAddress' };
+      const childField: FormlyFieldConfig = { props: { componentId: 'stateCode' } };
+
+      const result = component['_populateAddressConfiguration'](parentField, childField);
+
+      expect(result).toEqual({
+        props: {
+          componentId: 'stateCode',
+          autocomplete: 'address-level1',
+          type: 'text',
+        },
+        className: 'flex-half',
+        type: 'nuverialSelect',
+      });
+    });
+
+    it('should populate postal code field', async () => {
+      const { component } = await getFixtureByTemplate();
+      const parentField: FormlyFieldConfig<FormlyAddressFieldProperties> = { key: 'personalInformation.currentAddress' };
+      const childField: FormlyFieldConfig = { props: { componentId: 'postalCode' } };
+
+      const result = component['_populateAddressConfiguration'](parentField, childField);
+
+      expect(result).toEqual({
+        props: {
+          componentId: 'postalCode',
+          autocomplete: 'postal-code',
+          type: 'text',
+        },
+        className: 'flex-quarter',
+        type: 'nuverialTextInput',
+      });
+    });
+
+    it('should populate postal code extension field', async () => {
+      const { component } = await getFixtureByTemplate();
+      const parentField: FormlyFieldConfig<FormlyAddressFieldProperties> = { key: 'personalInformation.currentAddress' };
+      const childField: FormlyFieldConfig = { props: { componentId: 'postalCodeExtension' } };
+
+      const result = component['_populateAddressConfiguration'](parentField, childField);
+
+      expect(result).toEqual({
+        props: {
+          componentId: 'postalCodeExtension',
+          type: 'text',
+        },
+        className: 'flex-quarter',
+        type: 'nuverialTextInput',
+      });
+    });
+
+    it('should populate country code field', async () => {
+      const { component } = await getFixtureByTemplate();
+      const parentField: FormlyFieldConfig<FormlyAddressFieldProperties> = { key: 'personalInformation.currentAddress' };
+      const childField: FormlyFieldConfig = { props: { componentId: 'countryCode' } };
+
+      const result = component['_populateAddressConfiguration'](parentField, childField);
+
+      expect(result).toEqual({
+        props: {
+          componentId: 'countryCode',
+          autocomplete: 'country',
+          type: 'text',
+        },
+        className: 'flex-half',
+        type: 'nuverialSelect',
+      });
+    });
+
+    it('should return the child field if componentId is not recognized', async () => {
+      const { component } = await getFixtureByTemplate();
+      const parentField: FormlyFieldConfig<FormlyAddressFieldProperties> = { key: 'personalInformation.currentAddress' };
+      const childField: FormlyFieldConfig = { props: { componentId: 'unknownComponent' } };
+
+      const result = component['_populateAddressConfiguration'](parentField, childField);
+
+      expect(result).toEqual(childField);
+    });
   });
 });

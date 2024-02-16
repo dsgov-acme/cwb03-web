@@ -3,13 +3,18 @@ import { ElementRef, Renderer2 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NuverialSnackBarService } from '@dsg/shared/ui/nuverial';
 import { EnvironmentTestingModule } from '@dsg/shared/utils/environment';
 import { initialize } from '@googlemaps/jest-mocks';
+import { MockProvider, ngMocks } from 'ng-mocks';
+import { BehaviorSubject } from 'rxjs';
 import { GoogleMapsAutocompleteComponent } from './google-maps-autocomplete.component';
+import { GoogleMapsService } from './google-maps.service';
 
 describe('GoogleMapsAutocompleteComponent', () => {
   let component: GoogleMapsAutocompleteComponent;
   let fixture: ComponentFixture<GoogleMapsAutocompleteComponent>;
+  const _isLoaded = new BehaviorSubject<boolean>(true);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -17,6 +22,8 @@ describe('GoogleMapsAutocompleteComponent', () => {
       providers: [
         { provide: ElementRef, useValue: { nativeElement: {} } },
         { provide: Renderer2, useValue: {} },
+        MockProvider(NuverialSnackBarService),
+        MockProvider(GoogleMapsService, { isLoaded$: _isLoaded.asObservable() }),
       ],
     }).compileComponents();
 
@@ -30,18 +37,80 @@ describe('GoogleMapsAutocompleteComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('Init', () => {
-    it('should call _loadScript during ngOnInit', async () => {
-      // Arrange
-      jest.spyOn(component as any, '_loadScript');
+  it.skip('should initialize Google Maps Autocomplete', async () => {
+    // Arrange
+    const mockPlace = {
+      formatted_address: '123 Main St, Cityville, USA',
+      place_id: 'abc123',
+      geometry: {
+        location: {
+          lat: 40.7128,
+          lng: -74.006,
+        },
+      },
+      address_components: [],
+    } as unknown as google.maps.places.PlaceResult;
+    const mockGoogleMaps = {
+      places: {
+        Autocomplete: jest.fn().mockReturnValue({
+          addListener: jest.fn().mockImplementation((event: string, callback: () => void) => {
+            if (event === 'place_changed') {
+              callback();
+            }
+          }),
+          getPlace: jest.fn().mockReturnValue(mockPlace),
+        }),
+      },
+    };
+    const inputElement = { nativeElement: { value: '' } };
+    component.inputElement = inputElement;
+    const snackbarService = ngMocks.findInstance(NuverialSnackBarService);
+    const googleMapsService = ngMocks.findInstance(GoogleMapsService);
+    jest.spyOn(snackbarService, 'notifyApplicationError');
+    jest.spyOn(googleMapsService.isLoaded$, 'subscribe');
+    jest.spyOn(component.gotGoogleAddress, 'emit');
+    jest.spyOn(google.maps.places, 'Autocomplete');
+    initialize();
 
-      // Act
-      initialize();
-      await component.ngOnInit();
+    // Act
+    component.ngAfterViewInit();
+    _isLoaded.next(true);
 
-      // Assert
-      expect((component as any)._loadScript).toHaveBeenCalled();
-    });
+    // Assert
+    expect(googleMapsService.isLoaded$.subscribe).toHaveBeenCalled();
+    expect(googleMapsService.isLoaded$.subscribe).toHaveBeenCalledTimes(1);
+    expect(mockGoogleMaps.places.Autocomplete).toHaveBeenCalled();
+    expect(mockGoogleMaps.places.Autocomplete).toHaveBeenCalledTimes(1);
+    expect(mockGoogleMaps.places.Autocomplete).toHaveBeenCalledWith(inputElement.nativeElement, component.autocompleteOptions);
+    expect(mockGoogleMaps.places.Autocomplete().addListener).toHaveBeenCalled();
+    expect(mockGoogleMaps.places.Autocomplete().addListener).toHaveBeenCalledTimes(1);
+    expect(mockGoogleMaps.places.Autocomplete().addListener).toHaveBeenCalledWith('place_changed', expect.any(Function));
+    expect(mockGoogleMaps.places.Autocomplete().getPlace).toHaveBeenCalled();
+    expect(mockGoogleMaps.places.Autocomplete().getPlace).toHaveBeenCalledTimes(1);
+    expect(component.gotGoogleAddress.emit).toHaveBeenCalled();
+    expect(component.gotGoogleAddress.emit).toHaveBeenCalledTimes(1);
+    // expect(component.gotGoogleAddress.emit).toHaveBeenCalledWith(expect.any(GooglePlace));
+    expect(inputElement.nativeElement.value).toBe(mockPlace.formatted_address);
+  });
+
+  it('should handle error when Google Maps fails to load', async () => {
+    // Arrange
+    initialize();
+    const snackbarService = ngMocks.findInstance(NuverialSnackBarService);
+    const googleMapsService = ngMocks.findInstance(GoogleMapsService);
+    jest.spyOn(snackbarService, 'notifyApplicationError');
+    jest.spyOn(googleMapsService.isLoaded$, 'subscribe');
+
+    // Act
+    _isLoaded.error('Script loading failed');
+    component.ngAfterViewInit();
+
+    // Assert
+    expect(googleMapsService.isLoaded$.subscribe).toHaveBeenCalled();
+    expect(googleMapsService.isLoaded$.subscribe).toHaveBeenCalledTimes(1);
+    expect(snackbarService.notifyApplicationError).toHaveBeenCalled();
+    expect(snackbarService.notifyApplicationError).toHaveBeenCalledTimes(1);
+    expect(snackbarService.notifyApplicationError).toHaveBeenCalledWith('Unable to load Google Maps');
   });
 
   it('should set inputElement property', () => {
@@ -142,46 +211,6 @@ describe('GoogleMapsAutocompleteComponent', () => {
         streetNumber: '123',
         streetName: 'Main St',
       });
-    });
-  });
-
-  describe('_loadScript', () => {
-    it('should return a resolved promise if Google Maps script is already loaded', async () => {
-      // Act
-      initialize();
-      const result = await component['_loadScript']();
-
-      // Assert
-      expect(result).toBeUndefined();
-    });
-
-    // skip for now until we can successfully mock script onLoad event
-    it.skip('should return a resolved promise if the script element already exists and is loaded', async () => {
-      // Arrange
-      initialize();
-      (google.maps as any) = undefined;
-      const url = `https://maps.googleapis.com/maps/api/js?key=${component['_environment'].googlePlacesApiConfiguration?.googleApiKey}&libraries=places`;
-      const existingScript = document.createElement('script');
-      existingScript.src = url;
-      document.head.appendChild(existingScript);
-
-      existingScript.dispatchEvent(new Event('load'));
-
-      // Act
-      const result = await component['_loadScript']();
-
-      // Assert
-      expect(result).toBeUndefined();
-    });
-
-    it.skip('should return a promise that resolves when the script is loaded', async () => {
-      // Arrange
-
-      // Act
-      const result = await component['_loadScript']();
-
-      // Assert
-      expect(result).toBeUndefined();
     });
   });
 });

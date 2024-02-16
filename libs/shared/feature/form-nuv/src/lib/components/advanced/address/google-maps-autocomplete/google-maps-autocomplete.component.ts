@@ -1,12 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Inject, Input, OnInit, Output, Renderer2 } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { IFormConfigurationSchema } from '@dsg/shared/data-access/work-api';
-import { NuverialTextInputComponent } from '@dsg/shared/ui/nuverial';
-import { ENVIRONMENT_CONFIGURATION, IEnvironment } from '@dsg/shared/utils/environment';
+import { NuverialSnackBarService, NuverialTextInputComponent } from '@dsg/shared/ui/nuverial';
+import { catchError, EMPTY, take, tap } from 'rxjs';
 import { AddressFieldToKeys, GoogleAddress, GoogleAddressAttributes, GooglePlace } from '../models/googleplaces.api.model';
 import { AddressField } from './../models/googleplaces.api.model';
+import { GoogleMapsService } from './google-maps.service';
+
+declare global {
+  interface Window {
+    initMap: () => void;
+  }
+}
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,7 +23,7 @@ import { AddressField } from './../models/googleplaces.api.model';
   styleUrls: ['./google-maps-autocomplete.component.scss'],
   templateUrl: './google-maps-autocomplete.component.html',
 })
-export class GoogleMapsAutocompleteComponent implements OnInit {
+export class GoogleMapsAutocompleteComponent implements AfterViewInit {
   @Output() public readonly gotGoogleAddress = new EventEmitter<GooglePlace>();
   @Output() public readonly gotGoogleAddressTemplate = new EventEmitter<GooglePlace>();
   @Input() public component?: IFormConfigurationSchema;
@@ -33,21 +40,33 @@ export class GoogleMapsAutocompleteComponent implements OnInit {
     types: ['address'],
   };
 
-  constructor(@Inject(ENVIRONMENT_CONFIGURATION) private readonly _environment: IEnvironment, private readonly _renderer: Renderer2) {}
+  constructor(private readonly _snackbarService: NuverialSnackBarService, private readonly _googleMapsService: GoogleMapsService) {}
 
-  public async ngOnInit(): Promise<void> {
-    await this._loadScript();
+  public ngAfterViewInit(): void {
+    this._googleMapsService.isLoaded$
+      .pipe(
+        tap(isLoaded => {
+          if (!isLoaded) return;
 
-    this.mapsAutocomplete = new google.maps.places.Autocomplete(this.inputElement?.nativeElement, this.autocompleteOptions);
-    this.mapsAutocomplete.addListener('place_changed', () => {
-      const place = this.mapsAutocomplete?.getPlace();
-      if (place) {
-        const googleAddress: GoogleAddress = this.getGoogleAddress(place);
-        const googlePlace: GooglePlace = new GooglePlace(googleAddress);
-        this.gotGoogleAddress.emit(googlePlace);
-        if (this.inputElement) this.inputElement.nativeElement.value = googlePlace.addressLine1;
-      }
-    });
+          this.mapsAutocomplete = new google.maps.places.Autocomplete(this.inputElement?.nativeElement, this.autocompleteOptions);
+          this.mapsAutocomplete.addListener('place_changed', () => {
+            const place = this.mapsAutocomplete?.getPlace();
+            if (place) {
+              const googleAddress: GoogleAddress = this.getGoogleAddress(place);
+              const googlePlace: GooglePlace = new GooglePlace(googleAddress);
+              this.gotGoogleAddress.emit(googlePlace);
+              if (this.inputElement) this.inputElement.nativeElement.value = googlePlace.addressLine1;
+            }
+          });
+        }),
+        catchError(() => {
+          this._snackbarService.notifyApplicationError('Unable to load Google Maps');
+
+          return EMPTY;
+        }),
+        take(1),
+      )
+      .subscribe();
   }
 
   public getInputElement(inputElement: ElementRef) {
@@ -76,22 +95,25 @@ export class GoogleMapsAutocompleteComponent implements OnInit {
 
         if (type && addressKey) {
           switch (type) {
-            case AddressField.streetNumber:
-            case AddressField.streetName:
-            case AddressField.suite:
-            case AddressField.neighborhood:
             case AddressField.city:
+            case AddressField.country:
             case AddressField.county:
-            case AddressField.state:
-              googleAddress[addressKey] = component.short_name;
-              if (type === AddressField.state) {
-                googleAddress.stateLong = component.long_name;
-              }
-              break;
+            case AddressField.neighborhood:
+            case AddressField.streetName:
+            case AddressField.streetNumber:
+            case AddressField.suite:
             case AddressField.zipcode:
             case AddressField.zipcodeSecondary:
-            case AddressField.country:
               googleAddress[addressKey] = component.short_name;
+              break;
+            case AddressField.state:
+              googleAddress[addressKey] = component.short_name;
+              googleAddress.stateLong = component.long_name;
+              break;
+            case AddressField.subLocal:
+              if (!googleAddress.city) {
+                googleAddress.city = component.short_name;
+              }
               break;
           }
         }
@@ -99,59 +121,5 @@ export class GoogleMapsAutocompleteComponent implements OnInit {
     }
 
     return googleAddress;
-  }
-
-  private _loadScript(): Promise<void> {
-    // Check if the Google Maps script has already been loaded
-    if (typeof google === 'object' && typeof google.maps === 'object') {
-      return Promise.resolve();
-    }
-
-    // Define the script URL
-    const url = `https://maps.googleapis.com/maps/api/js?key=${this._environment.googlePlacesApiConfiguration?.googleApiKey}&libraries=places`;
-
-    // Check if the script element already exists
-    const existingScript = document.querySelector(`script[src="${url}"]`);
-
-    if (existingScript) {
-      // If the script element exists, check if it's still loading
-      if (existingScript.hasAttribute('data-loading')) {
-        // If it's still loading, wait for it to finish loading
-        return new Promise<void>(resolve => {
-          existingScript.addEventListener('load', () => {
-            resolve();
-          });
-        });
-      } else {
-        // If it's already loaded, resolve immediately
-        return Promise.resolve();
-      }
-    }
-
-    // Create script element
-    const script = this._renderer.createElement('script');
-    script.async = true;
-    script.src = url;
-
-    // Set a data attribute to indicate that the script is still loading
-    script.setAttribute('data-loading', 'true');
-
-    // Create a promise that resolves when the script is loaded
-    const scriptLoaded = new Promise<void>((resolve, reject) => {
-      script.onload = () => {
-        script.removeAttribute('data-loading');
-        resolve();
-      };
-      script.onerror = () => {
-        script.removeAttribute('data-loading');
-        reject();
-      };
-    });
-
-    // Append script to the document header
-    this._renderer.appendChild(document.head, script);
-
-    // Return the promise that resolves when the script is loaded
-    return scriptLoaded;
   }
 }
