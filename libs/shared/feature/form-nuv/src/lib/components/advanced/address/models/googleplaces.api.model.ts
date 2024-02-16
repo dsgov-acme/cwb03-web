@@ -6,6 +6,7 @@ export enum AddressField {
   state = 'administrative_area_level_1',
   streetName = 'route',
   streetNumber = 'street_number',
+  subLocal = 'sublocality', // city fallback
   suite = 'subpremise',
   zipcode = 'postal_code',
   zipcodeSecondary = 'postal_code_suffix',
@@ -20,6 +21,7 @@ export enum AddressFieldToKeys {
   route = 'streetName',
   street_number = 'streetNumber',
   subpremise = 'suite',
+  sublocality = 'city',
   postal_code = 'zip',
   postal_code_suffix = 'zipSecondary',
 }
@@ -34,6 +36,7 @@ export const GoogleAddressAttributes = new Set<string>([
   'postal_code_suffix',
   'route',
   'street_number',
+  'sublocality',
   'subpremise',
 ]);
 

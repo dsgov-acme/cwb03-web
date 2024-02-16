@@ -172,9 +172,7 @@ const addressFieldsConfiguration = {
         allowedSchemaTypes: ['String'],
       },
       validate: {
-        custom: `if(input === null) { valid = "Form schema does not exist, please configure a new schema in the transaction details page"; }\
-    else if (!row.hide && input === "") { valid = "Property key name is required"; }\
-    else { valid = true; }`,
+        custom: `if (row.hide) { valid = true; } else ${defaultPropertyKeyConfiguration.validate.custom}`,
         ...{ ...formioAlphaNumericValidator, required: false },
       },
     },

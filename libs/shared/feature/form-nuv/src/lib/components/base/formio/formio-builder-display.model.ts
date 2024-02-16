@@ -33,6 +33,8 @@ export const defaultPropertyKeyConfiguration = {
   tooltip: 'The property key of the data model.',
   type: 'nuverialSchemaKeySelector',
   validate: {
+    // note: this is used in multiple places, if it is changed please update all usages
+    // ex. custom: `if (row.hide) { valid = true; } else ${defaultPropertyKeyConfiguration.validate.custom}`,
     custom: `if(input === null) { valid = "Form schema does not exist, please configure a new schema in the transaction details page"; }\
 else if (input === "") { valid = "Property key name is required"; }\
 else { valid = true; }`,
