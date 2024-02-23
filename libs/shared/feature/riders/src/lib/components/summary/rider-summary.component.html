@@ -37,29 +37,25 @@
           </span>
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <div class="additional-info-panel-group">
+      <div class="additional-info-panel-group" *ngIf="accommodations.hasMobilityDevices">
         <span class="additional-info-panel-group-icon">
           <nuverial-icon iconName="stethoscope_outline"></nuverial-icon>
         </span>
-        <div>Epilepsy</div>
-        <div>Orthopedic</div>
-        <div>Vision</div>
+        <div *ngFor="let disability of accommodations.disabilities; trackBy: trackByFn">{{ disability }}</div>
       </div>
-      <div class="additional-info-panel-group">
+      <div class="additional-info-panel-group" *ngIf="accommodations.hasMobilityDevices">
         <span class="additional-info-panel-group-icon">
           <nuverial-icon iconName="wheelchair_pickup_outline"></nuverial-icon>
         </span>
-        <div>Walker</div>
-        <div>Support Cane</div>
-        <div>Power Wheelchair</div>
+        <div *ngFor="let mobilityDevice of accommodations.mobilityDevices; trackBy: trackByFn">{{ mobilityDevice }}</div>
       </div>
-      <div class="additional-info-panel-group">
+      <div class="additional-info-panel-group" *ngIf="accommodations.hasPca">
         <span class="additional-info-panel-group-icon">
           <nuverial-icon iconName="groups_outline"></nuverial-icon>
         </span>
         <div>Personal Care Attendant</div>
       </div>
-      <div class="additional-info-panel-group">
+      <div class="additional-info-panel-group" *ngIf="accommodations.hasServiceAnimal">
         <span class="additional-info-panel-group-icon">
           <nuverial-icon iconName="sound_detection_dog_barking_outline"></nuverial-icon>
         </span>
@@ -67,7 +63,7 @@
       </div>
     </mat-expansion-panel>
   </div>
-  <div class="emergency-contact summary-item additional-info-panel">
+  <div class="emergency-contact summary-item additional-info-panel" *ngIf="accommodations.emergencyContact">
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
@@ -81,9 +77,9 @@
         <span class="additional-info-panel-group-icon">
           <nuverial-icon iconName="person_outline"></nuverial-icon>
         </span>
-        <div>August Hansen</div>
-        <div>Father</div>
-        <div>(917) 712-3232</div>
+        <div>{{ accommodations.emergencyContact.fullName }}</div>
+        <div>{{ accommodations.emergencyContact.relationship }}</div>
+        <div>{{ accommodations.emergencyContact.phone }}</div>
       </div>
     </mat-expansion-panel>
   </div>
