@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { IRendererFormConfigurationSchema, RecordModel, TransactionData } from '@dsg/shared/data-access/work-api';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { IRendererFormConfigurationSchema, TransactionData } from '@dsg/shared/data-access/work-api';
 import { AgencyRiderDetailsReviewRendererOptions, FormRendererComponent, NuvalenceFormRendererOptions } from '@dsg/shared/feature/form-nuv';
 import {
   INuverialTab,
@@ -33,9 +33,6 @@ import { riderReviewFormConfiguration } from './rider-review-form-configuration.
   templateUrl: './rider-details.component.html',
 })
 export class RiderDetailsComponent implements OnInit {
-  @Input()
-  public rider: RecordModel = new RecordModel();
-
   public rendererOptions: NuvalenceFormRendererOptions = AgencyRiderDetailsReviewRendererOptions;
   public tabs: INuverialTab[] = [
     { key: 'information', label: 'Rider Information' },
