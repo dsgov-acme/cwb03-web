@@ -110,6 +110,7 @@ export interface SelectOption {
 }
 
 export interface CustomFormlyFieldProps extends FormlyFieldProps {
+  [key: string]: unknown;
   selectOptions?: SelectOption[];
   formErrorLabel?: string;
 }

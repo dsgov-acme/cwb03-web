@@ -24,6 +24,11 @@
 <ng-template #reviewTemplate>
   <div class="field-value-container">
     <div class="field-label">{{ props.label }}</div>
-    <div class="field-value">{{ displayTextValue }}</div>
+    <div class="field-value" *ngIf="!hasMultipleValues">{{ displayTextValue }}</div>
+    <ng-container *ngIf="hasMultipleValues">
+      <ng-container *ngFor="let val of displayTextValueMultiple; trackBy: trackByFn">
+        <div class="field-value">{{ val }}</div>
+      </ng-container>
+    </ng-container>
   </div>
 </ng-template>

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { IRendererFormConfigurationSchema, TransactionMockWithDocuments } from '@dsg/shared/data-access/work-api';
-import { AgencyDetailsReviewRendererOptions, FormRendererComponent, FormRendererService, NuvalenceFormRendererOptions } from '@dsg/shared/feature/form-nuv';
+import { IRendererFormConfigurationSchema, TransactionData } from '@dsg/shared/data-access/work-api';
+import { AgencyRiderDetailsReviewRendererOptions, FormRendererComponent, NuvalenceFormRendererOptions } from '@dsg/shared/feature/form-nuv';
 import {
   INuverialTab,
   NuverialBreadcrumbComponent,
@@ -11,7 +11,9 @@ import {
   NuverialTabsComponent,
 } from '@dsg/shared/ui/nuverial';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { Observable, map } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
+import { RiderProfileService } from '../../services';
+import { riderReviewFormConfiguration } from './rider-review-form-configuration.model';
 
 @UntilDestroy()
 @Component({
@@ -31,20 +33,19 @@ import { Observable, map } from 'rxjs';
   templateUrl: './rider-details.component.html',
 })
 export class RiderDetailsComponent implements OnInit {
-  public transactionMock = TransactionMockWithDocuments;
-
-  public rendererOptions: NuvalenceFormRendererOptions = AgencyDetailsReviewRendererOptions;
-
-  public formRendererConfiguration$?: Observable<IRendererFormConfigurationSchema[]> = this._formRendererService.formConfiguration$.pipe(
-    map(formConfigurationModel => formConfigurationModel?.toReviewForm()),
-  );
-
+  public rendererOptions: NuvalenceFormRendererOptions = AgencyRiderDetailsReviewRendererOptions;
   public tabs: INuverialTab[] = [
     { key: 'information', label: 'Rider Information' },
     { key: 'eligibility', label: 'Eligibility & Certification' },
   ];
 
-  constructor(private readonly _formRendererService: FormRendererService) {}
+  public formRendererConfiguration$?: Observable<IRendererFormConfigurationSchema[]> = of(riderReviewFormConfiguration).pipe(
+    map(formConfigurationModel => formConfigurationModel?.toReviewForm()),
+  );
+
+  public model$?: Observable<TransactionData> = this._riderProfileService.rider$.pipe(map(recordModel => recordModel.toTransactionModel().data));
+
+  constructor(private readonly _riderProfileService: RiderProfileService) {}
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method, @typescript-eslint/no-empty-function
   public ngOnInit() {}

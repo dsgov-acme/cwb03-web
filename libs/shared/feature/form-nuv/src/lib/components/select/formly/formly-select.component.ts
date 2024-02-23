@@ -15,7 +15,26 @@ import { SelectFieldProperties } from '../models/formly-select.model';
   templateUrl: './formly-select.component.html',
 })
 export class FormlySelectComponent extends FormlyBaseComponent<SelectFieldProperties> {
+  public get hasMultipleValues(): boolean {
+    return this.formControl.value && Array.isArray(this.formControl.value);
+  }
+
   public get displayTextValue(): string | undefined {
-    return this.props.selectOptions?.find(opt => opt.key === this.formControl.value)?.displayTextValue;
+    if (!this.hasMultipleValues) {
+      return this.props.selectOptions?.find(opt => opt.key === this.formControl.value)?.displayTextValue;
+    }
+
+    return undefined;
+  }
+  public get displayTextValueMultiple(): string[] | undefined {
+    if (this.hasMultipleValues) {
+      return this.props.selectOptions?.filter(opt => Array.from(this.formControl.value).indexOf(opt.key) > -1).map(opt => opt.displayTextValue);
+    }
+
+    return [];
+  }
+
+  public trackByFn(index: number): number {
+    return index;
   }
 }

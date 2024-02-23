@@ -70,3 +70,11 @@ export const AgencyDetailsReviewRendererOptions: NuvalenceFormRendererOptions = 
     workflow: FormStateWorkflow.AgencyDetails,
   },
 };
+
+export const AgencyRiderDetailsReviewRendererOptions: NuvalenceFormRendererOptions = {
+  formState: {
+    mode: FormStateMode.Review,
+    stepperMode: FormStateStepperMode.Review,
+    workflow: FormStateWorkflow.AgencyDetails,
+  },
+};
