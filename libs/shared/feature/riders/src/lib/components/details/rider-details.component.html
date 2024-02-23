@@ -1,6 +1,6 @@
 <nuverial-tabs [tabs]="tabs">
   <ng-template let-form nuverialTabKey="information">
-    <div></div>
+    <dsg-form-renderer class="step-content" [fields$]="formRendererConfiguration$" [model$]="model$" [options]="rendererOptions"></dsg-form-renderer>
   </ng-template>
   <ng-template let-form nuverialTabKey="eligibility">
     <div></div>

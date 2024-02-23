@@ -1,4 +1,5 @@
 import { IPaginationResponse, IPagingMetadata, SchemaModel } from '@dsg/shared/utils/http';
+import { TransactionModel } from '../transaction/transaction.model';
 
 export interface RecordListSchema {
   items: IRecord[];
@@ -90,5 +91,33 @@ export class RecordModel implements SchemaModel<IRecord> {
     return {
       data: this.data,
     };
+  }
+
+  public toTransactionModel(): TransactionModel {
+    const transaction: TransactionModel = new TransactionModel();
+    transaction.fromSchema({
+      activeTasks: [],
+      createdBy: this.createdBy,
+      createdByDisplayName: this.createdBy,
+      createdTimestamp: this.createdTimestamp,
+      data: this.data,
+      externalId: this.externalId,
+      id: this.id,
+      isComplete: false,
+      lastUpdatedTimestamp: this.lastUpdatedTimestamp,
+      priority: '',
+      processInstanceId: '',
+      status: this.status,
+      subjectProfileId: '',
+      subjectProfileType: '',
+      subjectUserDisplayName: '',
+      subjectUserId: '',
+      submittedOn: '',
+      transactionDefinitionId: '',
+      transactionDefinitionKey: '',
+      transactionDefinitionName: '',
+    });
+
+    return transaction;
   }
 }
