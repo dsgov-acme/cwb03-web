@@ -61,17 +61,17 @@ export class FormlySelectPromiseTimeComponent extends FormlyBaseComponent<Select
     return {
       anchor: this.model.anchor,
       dropPlaceId: this.model.dropLocation?.placeId || this.model.dropLocation?.id,
-      passengerAccommodations: this._buildPassengerAccomodations(),
+      passengerAccommodations: this._buildPassengerAccommodations(),
       pickupPlaceId: this.model.pickLocation?.placeId || this.model.pickLocation?.id,
       riderId: this.model.rider?.id || '',
     };
   }
 
-  private _buildPassengerAccomodations(): PassengerAccomodations {
+  private _buildPassengerAccommodations(): PassengerAccomodations {
     return {
-      ambulatorySeats: this.model.rider?.ambSeats ? 1 : 0,
-      companions: this.model.rider?.numCompanion,
-      wheelchairSeats: this.model.rider?.wcSeats ? 1 : 0,
+      ambulatorySeats: this.model.rider?.accommodations?.ambSeats ? 1 : 0,
+      companions: this.model.rider?.accommodations?.numCompanion || 0,
+      wheelchairSeats: this.model.rider?.accommodations?.wcSeats ? 1 : 0,
     };
   }
 
