@@ -1,8 +1,8 @@
 import { INuverialRadioCard } from '@dsg/shared/ui/nuverial';
 import { BaseAdvancedFormlyFieldProperties } from '../../../base';
 
-export interface CardsFieldProperties extends BaseAdvancedFormlyFieldProperties {
+export interface SelectPromiseTimeProperties extends BaseAdvancedFormlyFieldProperties {
   value?: string;
-  answers?: INuverialRadioCard[];
+  selectOptions?: INuverialRadioCard[];
   formErrorLabel?: string;
 }

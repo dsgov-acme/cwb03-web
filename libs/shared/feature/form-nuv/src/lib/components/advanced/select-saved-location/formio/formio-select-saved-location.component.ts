@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { INuverialSelectOption, NuverialCardContentDirective, NuverialSelectComponent } from '@dsg/shared/ui/nuverial';
 import { Observable, map } from 'rxjs';
 import { SavedLocationService } from '../../../../services/saved-location.service';
@@ -14,13 +14,13 @@ import { MTALocation, SelectSavedLocationFieldProperties } from '../models/forml
   styleUrls: ['./formio-select-saved-location.component.scss'],
   templateUrl: './formio-select-saved-location.component.html',
 })
-export class FormioSelectSavedLocationComponent extends FormioBaseCustomComponent<string, SelectSavedLocationFieldProperties> {
+export class FormioSelectSavedLocationComponent extends FormioBaseCustomComponent<string, SelectSavedLocationFieldProperties> implements OnInit {
+  public selectOptions$: Observable<INuverialSelectOption[]> = new Observable<INuverialSelectOption[]>();
+  public savedLocations$: Observable<MTALocation[]> = new Observable<MTALocation[]>();
+
   constructor(private readonly _savedLocationService: SavedLocationService) {
     super();
   }
-
-  public selectOptions$: Observable<INuverialSelectOption[]> = new Observable<INuverialSelectOption[]>();
-  public savedLocations$: Observable<MTALocation[]> = new Observable<MTALocation[]>();
 
   public ngOnInit(): void {
     this.savedLocations$ = this._savedLocationService.getSavedLocations$('');

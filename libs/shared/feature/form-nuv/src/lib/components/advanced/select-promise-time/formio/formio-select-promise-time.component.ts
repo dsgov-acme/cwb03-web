@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { INuverialRadioCard, NuverialRadioCardsComponent } from '@dsg/shared/ui/nuverial';
 import { Observable, of } from 'rxjs';
 import { FormioBaseCustomComponent } from '../../../base';
-import { CardsFieldProperties } from '../models/formly-select-promise-time.model';
+import { SelectPromiseTimeProperties } from '../models/formly-select-promise-time.model';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -13,7 +13,7 @@ import { CardsFieldProperties } from '../models/formly-select-promise-time.model
   styleUrls: ['./formio-select-promise-time.component.scss'],
   templateUrl: './formio-select-promise-time.component.html',
 })
-export class FormioSelectPromiseTimeComponent extends FormioBaseCustomComponent<string, CardsFieldProperties> implements OnInit {
+export class FormioSelectPromiseTimeComponent extends FormioBaseCustomComponent<string, SelectPromiseTimeProperties> implements OnInit {
   public selectOptions$: Observable<INuverialRadioCard[]> = new Observable<INuverialRadioCard[]>();
 
   public ngOnInit(): void {
