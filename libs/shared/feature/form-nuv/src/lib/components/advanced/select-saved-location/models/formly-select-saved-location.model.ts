@@ -6,8 +6,8 @@ export interface SelectSavedLocationFieldProperties extends BaseAdvancedFormlyFi
 }
 
 export interface CommonAddress {
-  address1?: string;
-  address2?: string;
+  addressLine1?: string;
+  addressLine2?: string;
   city?: string;
   stateCode?: string;
   postalCode?: string;

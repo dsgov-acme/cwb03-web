@@ -1,6 +1,6 @@
 export interface CommonAddress {
-  address1?: string;
-  address2?: string;
+  addressLine1?: string;
+  addressLine2?: string;
   city?: string;
   stateCode?: string;
   postalCode?: string;
@@ -23,8 +23,8 @@ export enum LocationType {
 }
 
 export enum AnchorType {
-  Pickup = 'PICKUP',
-  Dropoff = 'DROPOFF',
+  PICKUP = 'PICKUP',
+  DROPOFF = 'DROPOFF',
 }
 
 export interface PassengerAccomodations {

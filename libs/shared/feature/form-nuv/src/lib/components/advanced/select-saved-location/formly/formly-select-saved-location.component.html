@@ -21,8 +21,8 @@
 <ng-template #reviewTemplate>
   <div *ngIf="reviewDetails as details">
     <div class="field-label">{{ details.name }}</div>
-    <div class="field-value">{{details.address?.address1}}</div>
-    <div class="field-value">{{details.address?.address2}}</div>
+    <div class="field-value">{{details.address?.addressLine1}}</div>
+    <div class="field-value">{{details.address?.addressLine2}}</div>
     <div class="field-value">
       {{reviewDetails.address?.city}}, {{details.address?.stateCode}} {{details.address?.postalCode}}{{details.address?.postalCodeExtension && '-' +
       details.address?.postalCodeExtension}} {{ details.address?.countryCode}}
