@@ -6,7 +6,7 @@ import { FormlyModule } from '@ngx-formly/core';
 import { Observable, map } from 'rxjs';
 import { PromiseTimeService } from '../../../../services/promise-time.service';
 import { FormlyBaseComponent } from '../../../base';
-import { CardsFieldProperties } from '../models/formly-select-promise-time.model';
+import { SelectPromiseTimeProperties } from '../models/formly-select-promise-time.model';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,7 +16,7 @@ import { CardsFieldProperties } from '../models/formly-select-promise-time.model
   styleUrls: ['./formly-select-promise-time.component.scss'],
   templateUrl: './formly-select-promise-time.component.html',
 })
-export class FormlySelectPromiseTimeComponent extends FormlyBaseComponent<CardsFieldProperties> implements OnInit {
+export class FormlySelectPromiseTimeComponent extends FormlyBaseComponent<SelectPromiseTimeProperties> implements OnInit {
   public selectOptions$: Observable<INuverialRadioCard[]> = new Observable<INuverialRadioCard[]>();
   public promiseTimes$: Observable<PromiseTime[]> = new Observable<PromiseTime[]>();
 
