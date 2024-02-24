@@ -42,7 +42,7 @@ import {
 import { DashboardCountModel, IDashboardCount } from '../models/dashboard/dashboard-count.model';
 import { DashboardModel, IDashboard } from '../models/dashboard/dashboard.model';
 import { EmployerProfileLink, IEmployerProfileLink } from '../models/employer-profile/employer-profile-link.model';
-import { PromiseTimeRequest, PromiseTimeResponse } from '../models/mta/mta.models';
+import { MTALocation, PromiseTimeRequest, PromiseTimeResponse } from '../models/mta/mta.models';
 import { IRecordDefinition, RecordDefinitionModel } from '../models/record-definition/record-definition.model';
 import { IRecord, IRecordsPaginationResponse, RecordModel, UpdateRecordOptions } from '../models/record/record.model';
 import { ISchemaTreeDefinition, SchemaTreeDefinitionModel } from '../models/schema-tree/schema-tree.model';
@@ -67,9 +67,13 @@ export class WorkApiRoutesService extends HttpBaseService {
     return this._handlePost$<PromiseTimeResponse>(`/v1/ride-request/promise-times`, promiseTimeRequest);
   }
 
-  // public getSavedLocationsByUserId$(userId: string): Observable<MTALocation[]> {
-  //   return this._handleGet$<MTALocation[]>(`/v1/${userId}`);
-  // }
+  public getSavedLocationsByUserId$(userId: string): Observable<MTALocation[]> {
+    return this._handleGet$<MTALocation[]>(`/v1/saved-locations?userId=${userId}`);
+  }
+
+  public getSavedLocationsByRiderId$(riderId: string): Observable<MTALocation[]> {
+    return this._handleGet$<MTALocation[]>(`/v1/saved-locations?riderId=${riderId}`);
+  }
 
   /**
    * Update a form data schema definition

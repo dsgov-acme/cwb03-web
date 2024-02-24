@@ -60,9 +60,9 @@ export class FormlySelectPromiseTimeComponent extends FormlyBaseComponent<CardsF
   private _buildPromiseTimeRequest(): PromiseTimeRequest {
     return {
       anchor: this.model.anchor,
-      dropPlaceId: this.model.dropLocation?.placeId,
+      dropPlaceId: this.model.dropLocation?.placeId || this.model.dropLocation?.id,
       passengerAccommodations: this._buildPassengerAccomodations(),
-      pickupPlaceId: this.model.pickLocation?.placeId,
+      pickupPlaceId: this.model.pickLocation?.placeId || this.model.pickLocation?.id,
       riderId: this.model.rider?.id || '',
     };
   }
