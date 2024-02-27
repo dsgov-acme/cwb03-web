@@ -1,5 +1,14 @@
+/* eslint-disable @typescript-eslint/dot-notation */
+/* eslint-disable @typescript-eslint/member-ordering */
 import { Injectable } from '@angular/core';
-import { FormConfigurationModel, FormModel, TransactionModel, UpdateTransactionOptions, WorkApiRoutesService } from '@dsg/shared/data-access/work-api';
+import {
+  FormConfigurationModel,
+  FormModel,
+  RecordModel,
+  TransactionModel,
+  UpdateTransactionOptions,
+  WorkApiRoutesService,
+} from '@dsg/shared/data-access/work-api';
 import { IFormError } from '@dsg/shared/ui/nuverial';
 import { BehaviorSubject, Observable, filter, forkJoin, map, tap } from 'rxjs';
 
@@ -81,6 +90,28 @@ export class FormRendererService {
     this._transactionId.next(transactionId);
 
     return forkJoin([this._getFormConfiguration$(), this._getTransaction$()]);
+  }
+
+  public loadTransactionDetailsWithRiderInfo$(transactionId: string, rider: RecordModel): Observable<[FormModel, TransactionModel]> {
+    this._transactionId.next(transactionId);
+
+    return forkJoin([this._getFormConfiguration$(), this._getTransactionWithRiderInfo$(rider)]);
+  }
+
+  private _getTransactionWithRiderInfo$(rider: RecordModel): Observable<TransactionModel> {
+    return this._workApiRoutesService.getTransactionById$(this._transactionId.value).pipe(
+      map(transactionDetails => {
+        transactionDetails.data.rider = {};
+        transactionDetails.data.rider.id = rider.externalId;
+        transactionDetails.data.rider.firstName = rider.data['firstName'];
+        transactionDetails.data.rider.lastName = rider.data['lastName'];
+        transactionDetails.data.rider.email = rider.data['email'];
+        transactionDetails.data.rider.phone = rider.data['phone'];
+
+        return transactionDetails;
+      }),
+      tap(transactionDetails => this._transaction.next(transactionDetails)),
+    );
   }
 
   /**

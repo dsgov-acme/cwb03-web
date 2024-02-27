@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { WorkApiRoutesService } from '@dsg/shared/data-access/work-api';
 import { EventsLogComponent } from '@dsg/shared/feature/events';
 import { FormRendererComponent } from '@dsg/shared/feature/form-nuv';
 import { RiderDetailsComponent, RiderProfileService, RiderSummaryComponent } from '@dsg/shared/feature/riders';
@@ -9,6 +10,7 @@ import {
   INavigableTab,
   INuverialBreadCrumb,
   NuverialBreadcrumbComponent,
+  NuverialButtonComponent,
   NuverialCopyButtonComponent,
   NuverialFooterActionsComponent,
   NuverialIconComponent,
@@ -43,6 +45,7 @@ import { EMPTY, catchError, concatMap, of, switchMap, tap } from 'rxjs';
     NuverialNavigableTabsComponent,
     RiderSummaryComponent,
     RiderDetailsComponent,
+    NuverialButtonComponent,
   ],
   selector: 'dsg-rider-profile',
   standalone: true,
@@ -50,6 +53,7 @@ import { EMPTY, catchError, concatMap, of, switchMap, tap } from 'rxjs';
   templateUrl: './rider-profile.component.html',
 })
 export class RiderProfileComponent implements OnDestroy {
+  private readonly _reservationKey = 'MTAReservation';
   public breadCrumbs: INuverialBreadCrumb[] = [{ label: 'Back To Riders List', navigationPath: `/riders` }];
   public rider$ = this._riderProfileService.rider$.pipe(
     tap(rider => {
@@ -98,6 +102,8 @@ export class RiderProfileComponent implements OnDestroy {
     private readonly _riderProfileService: RiderProfileService,
     private readonly _route: ActivatedRoute,
     private readonly _nuverialSnackBarService: NuverialSnackBarService,
+    private readonly _workApiRoutesService: WorkApiRoutesService,
+    private readonly _router: Router,
   ) {}
 
   public ngOnDestroy(): void {
@@ -106,5 +112,19 @@ export class RiderProfileComponent implements OnDestroy {
 
   public trackByFn(index: number): number {
     return index;
+  }
+
+  public createNewTransaction() {
+    this._workApiRoutesService
+      .createTransaction$(this._reservationKey)
+      .pipe(
+        tap(transaction => this._router.navigate([`${this.baseRoute}/transaction/${transaction.id}`])),
+        catchError(_error => {
+          this._nuverialSnackBarService.notifyApplicationError();
+
+          return EMPTY;
+        }),
+      )
+      .subscribe();
   }
 }

@@ -1,0 +1,21 @@
+<ng-container *ngIf="loadRiderDetails$ | async as rider; else loadingSpinner">
+  <section class="user-details">
+    <nuverial-breadcrumb [breadCrumbs]="breadCrumbs"></nuverial-breadcrumb>
+
+    <dsg-rider-summary [rider]="rider"></dsg-rider-summary>
+
+    <ng-container *ngIf="isRiderStatusRequestPending">
+      <nuverial-spinner></nuverial-spinner>
+    </ng-container>
+  </section>
+
+  <section class="detail-container">
+    <ng-container *ngIf="(loadTransactionDetails$ | async) && !loading; else loadingSpinner">
+      <router-outlet></router-outlet>
+    </ng-container>
+  </section>
+</ng-container>
+
+<ng-template #loadingSpinner>
+  <nuverial-spinner></nuverial-spinner>
+</ng-template>

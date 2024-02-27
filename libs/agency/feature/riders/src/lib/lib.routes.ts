@@ -9,6 +9,17 @@ export const agencyFeatureRiderRoutes: Route[] = [
     children: [
       {
         data: { activeTab: 'detail' },
+        loadComponent: () => import('@dsg/shared/feature/riders').then(module => module.IntakeFormComponent),
+        path: '',
+      },
+    ],
+    loadComponent: () => import('@dsg/shared/feature/riders').then(module => module.RideReservationComponent),
+    path: ':recordId/transaction/:transactionId',
+  },
+  {
+    children: [
+      {
+        data: { activeTab: 'detail' },
         loadComponent: () => import('@dsg/shared/feature/riders').then(module => module.RiderDetailsComponent),
         path: 'detail',
       },

@@ -102,6 +102,8 @@ export interface TransactionData {
     industry?: string;
     employmentStatus?: string;
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  rider?: any;
 }
 
 export interface ITransactionsPaginationResponse<T> extends IPaginationResponse {
