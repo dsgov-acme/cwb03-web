@@ -1,6 +1,18 @@
 <ng-container *ngIf="loadRiderDetails$ | async as rider; else loading">
   <section class="user-details">
     <nuverial-breadcrumb [breadCrumbs]="breadCrumbs"></nuverial-breadcrumb>
+    <nuverial-button
+      class="new-form-button"
+      ariaLabel="Schedule a ride"
+      [loading]="false"
+      (click)="createNewTransaction()"
+      buttonStyle="outlined"
+      buttonType="submit"
+      colorTheme="primary"
+    >
+      <nuverial-icon class="black-icon" iconName="add" />
+      Schedule Ride
+    </nuverial-button>
     <dsg-rider-summary [rider]="rider"></dsg-rider-summary>
 
     <div class="detail-menu">

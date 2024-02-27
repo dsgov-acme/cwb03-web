@@ -36,21 +36,26 @@ export class FormlySelectSavedLocationComponent extends FormlyBaseComponent<Sele
   }
 
   public ngOnInit(): void {
-    // eslint-disable-next-line rxjs/no-subscribe-handlers
-    this._userStateService.user$.subscribe(user => {
-      this.savedLocations$ = this._savedLocationService.getSavedLocations$(user?.id || '');
-      this.selectOptions$ = this.savedLocations$.pipe(
-        map(locations => {
-          return locations.map(location => {
-            return {
-              disabled: false,
-              displayTextValue: location.name ?? '',
-              key: location.id ?? '',
-              selected: false,
-            };
-          });
-        }),
-      );
-    });
+    if (this.model?.rider?.id) {
+      this.savedLocations$ = this._savedLocationService.getSavedLocationsByRiderId$(this.model.rider.id);
+    } else {
+      // eslint-disable-next-line rxjs/no-subscribe-handlers
+      this._userStateService.user$.subscribe(user => {
+        this.savedLocations$ = this._savedLocationService.getSavedLocationsByUserId$(user?.id || '');
+      });
+    }
+
+    this.selectOptions$ = this.savedLocations$.pipe(
+      map(locations => {
+        return locations.map(location => {
+          return {
+            disabled: false,
+            displayTextValue: location.name ?? '',
+            key: location.id ?? '',
+            selected: false,
+          };
+        });
+      }),
+    );
   }
 }

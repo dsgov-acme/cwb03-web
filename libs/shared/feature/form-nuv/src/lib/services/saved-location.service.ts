@@ -16,7 +16,11 @@ export class SavedLocationService {
     return this._savedLocationsSubject.value.find(loc => loc.id === locationId);
   }
 
-  public getSavedLocations$(userId: string): Observable<MTALocation[]> {
+  public getSavedLocationsByUserId$(userId: string): Observable<MTALocation[]> {
     return this._workApiRoutesService.getSavedLocationsByUserId$(userId).pipe(tap(loc => this._savedLocationsSubject.next(loc)));
+  }
+
+  public getSavedLocationsByRiderId$(riderId: string): Observable<MTALocation[]> {
+    return this._workApiRoutesService.getSavedLocationsByRiderId$(riderId).pipe(tap(loc => this._savedLocationsSubject.next(loc)));
   }
 }
