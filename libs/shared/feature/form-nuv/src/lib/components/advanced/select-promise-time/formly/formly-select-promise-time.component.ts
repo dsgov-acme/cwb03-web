@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { PassengerAccomodations, PromiseTime, PromiseTimeRequest } from '@dsg/shared/data-access/work-api';
-import { INuverialRadioCard, NuverialRadioCardsComponent } from '@dsg/shared/ui/nuverial';
+import { INuverialRadioCard, NuverialRadioCardsComponent, NuverialSpinnerComponent } from '@dsg/shared/ui/nuverial';
 import { FormlyModule } from '@ngx-formly/core';
 import { Observable, map } from 'rxjs';
 import { PromiseTimeService } from '../../../../services/promise-time.service';
@@ -10,7 +10,7 @@ import { SelectPromiseTimeProperties } from '../models/formly-select-promise-tim
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormlyModule, NuverialRadioCardsComponent],
+  imports: [CommonModule, FormlyModule, NuverialRadioCardsComponent, NuverialSpinnerComponent],
   selector: 'dsg-formly-select-promise-time',
   standalone: true,
   styleUrls: ['./formly-select-promise-time.component.scss'],
@@ -26,6 +26,10 @@ export class FormlySelectPromiseTimeComponent extends FormlyBaseComponent<Select
 
   public get reviewDetails() {
     const promiseTime: PromiseTime | undefined = this._promiseTimeService.getPromiseTimeById(this.formControl.value);
+    if (promiseTime) {
+      this.model.promiseTime = promiseTime;
+      delete this.model?.promiseTime?.route;
+    }
 
     return {
       label: `Pickup at ${this._formatTime(promiseTime?.pickupTime)}`,
@@ -63,6 +67,7 @@ export class FormlySelectPromiseTimeComponent extends FormlyBaseComponent<Select
       dropPlaceId: this.model.dropLocation?.placeId || this.model.dropLocation?.id,
       passengerAccommodations: this._buildPassengerAccommodations(),
       pickupPlaceId: this.model.pickLocation?.placeId || this.model.pickLocation?.id,
+      requestTime: this._formatRequestTime(),
       riderId: this.model.rider?.id || '',
     };
   }
@@ -124,5 +129,30 @@ export class FormlySelectPromiseTimeComponent extends FormlyBaseComponent<Select
     const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
 
     return `${hours}:${formattedMinutes}${period}`;
+  }
+
+  private _formatRequestTime(): number | undefined {
+    if (!this.model.requestedTime || !this.model.requestedDate) {
+      return undefined; // Handle case where either requestedTime or requestedDate is missing
+    }
+
+    // Split the requestedTime string into hours and minutes
+    const timeParts = this.model.requestedTime.split(':').map(Number);
+    if (timeParts.length < 2 || isNaN(timeParts[0]) || isNaN(timeParts[1])) {
+      return undefined; // Handle case where requestedTime is not in the expected format
+    }
+    const [hours, minutes] = timeParts;
+
+    // Split the requestedDate string into year, month, and day
+    const dateParts = this.model.requestedDate.split('-').map(Number);
+    if (dateParts.length !== 3 || isNaN(dateParts[0]) || isNaN(dateParts[1]) || isNaN(dateParts[2])) {
+      return undefined; // Handle case where requestedDate is not in the expected format
+    }
+    const [year, month, day] = dateParts;
+
+    // Create a new Date object with the provided year, month, day, hours, and minutes in Eastern Time Zone
+    const requestTime = new Date(Date.UTC(year, month - 1, day, hours - 5, minutes)); // Subtract 5 hours for Eastern Time
+
+    return Math.floor(requestTime.getTime() / 1000);
   }
 }

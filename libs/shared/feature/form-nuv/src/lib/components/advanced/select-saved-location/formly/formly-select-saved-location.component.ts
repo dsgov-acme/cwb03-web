@@ -1,3 +1,4 @@
+/* eslint-disable rxjs/no-subscribe-handlers */
 /* eslint-disable @typescript-eslint/dot-notation */
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
@@ -8,7 +9,7 @@ import { UserStateService } from '@dsg/shared/feature/app-state';
 import { Observable, map } from 'rxjs';
 import { SavedLocationService } from '../../../../services/saved-location.service';
 import { FormlyBaseComponent } from '../../../base';
-import { MTALocation, SelectSavedLocationFieldProperties } from '../models/formly-select-saved-location.model';
+import { LocationType, MTALocation, SelectSavedLocationFieldProperties } from '../models/formly-select-saved-location.model';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,7 +29,20 @@ export class FormlySelectSavedLocationComponent extends FormlyBaseComponent<Sele
   }
 
   public get reviewDetails() {
-    return this._savedLocationService.getSavedLocationById(this.formControl.value);
+    const selectedLocation = this._savedLocationService.getSavedLocationById(this.formControl.value);
+    if (!selectedLocation) {
+      return;
+    }
+
+    if (this.field?.key === 'pickLocation.id') {
+      this.model.pickLocation = selectedLocation;
+      this.model.pickLocation.locationType = LocationType.SavedLocation;
+    } else if (this.field?.key === 'dropLocation.id') {
+      this.model.dropLocation = selectedLocation;
+      this.model.dropLocation.locationType = LocationType.SavedLocation;
+    }
+
+    return selectedLocation;
   }
 
   public get displayTextValue(): Observable<string | undefined> {
