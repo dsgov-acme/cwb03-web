@@ -6,13 +6,18 @@
 
 <ng-template #editTemplate>
   <nuverial-radio-cards
+    *ngIf="(selectOptions$ | async) as options; else loading"
     [columns]="props.cols"
     [formControl]="formControl"
     [groupName]="'group-' + (field.key ?? '')"
     [legend]="props.label"
-    [radioCards]="(selectOptions$ | async) || []"
+    [radioCards]="options || []"
     [required]="props.required!"
   />
+</ng-template>
+
+<ng-template #loading>
+  <nuverial-spinner></nuverial-spinner>
 </ng-template>
 
 <ng-template #reviewTemplate>

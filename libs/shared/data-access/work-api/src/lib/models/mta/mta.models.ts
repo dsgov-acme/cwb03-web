@@ -42,6 +42,7 @@ export interface PromiseTime {
 
 export interface PromiseTimeResponse {
   anchor?: AnchorType;
+  riderId?: string;
   promises?: PromiseTime[];
 }
 
@@ -51,6 +52,7 @@ export interface PromiseTimeRequest {
   pickupPlaceId?: string;
   dropPlaceId?: string;
   passengerAccommodations?: PassengerAccomodations;
+  requestTime?: number;
 }
 
 export interface SubmitReservationRequest {
