@@ -40,7 +40,7 @@ export class RideReservationComponent implements OnInit, OnDestroy {
       const riderId = params.get('recordId') ?? '';
 
       return this._riderProfileService.loadRiderDetails$(riderId).pipe(
-        tap(() => (this.breadCrumbs = [{ label: 'Rider Profile', navigationPath: `/riders/${this._riderProfileService.riderId}/detail` }])),
+        tap(() => (this.breadCrumbs = [{ label: 'Rider Profile', navigationPath: `/riders/${this._riderProfileService.recordId}/detail` }])),
         catchError(_error => {
           this._nuverialSnackBarService.notifyApplicationError();
 
@@ -73,7 +73,7 @@ export class RideReservationComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.loadRiderDetails$.subscribe(rider => {
+    this.loadRiderDetails$.pipe(take(1)).subscribe(rider => {
       this.loadTransactionDetails$ = this._route.paramMap.pipe(
         switchMap(params => {
           const transactionId = params.get('transactionId') ?? '';
@@ -88,9 +88,9 @@ export class RideReservationComponent implements OnInit, OnDestroy {
         tap(([_, transactionModel]) => {
           if (transactionModel.activeTasks.length) {
             const editExtras = this._resume === 'true' ? { queryParams: { resume: this._resume }, replaceUrl: true } : { replaceUrl: true };
-            this._router.navigate([`/riders/${this._riderProfileService.riderId}`, 'transaction', transactionModel.id], editExtras);
+            this._router.navigate([`/riders/${this._riderProfileService.recordId}`, 'transaction', transactionModel.id], editExtras);
           } else {
-            this._router.navigate([`/riders/${this._riderProfileService.riderId}`, 'transaction', transactionModel.id, 'readonly'], { replaceUrl: true });
+            this._router.navigate([`/riders/${this._riderProfileService.recordId}`, 'transaction', transactionModel.id, 'readonly'], { replaceUrl: true });
           }
         }),
       );

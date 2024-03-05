@@ -16,6 +16,10 @@
     line-height: var(--nuverial-icon-line-height);
     width: var(--nuverial-icon-size);
     color: var(--nuverial-icon-color);
+
+    &.mat-icon-white {
+      color: var(--theme-color-white);
+    }
   }
 
   .material-symbols-outlined {
