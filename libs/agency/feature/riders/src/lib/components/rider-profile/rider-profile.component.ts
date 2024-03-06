@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -114,9 +115,12 @@ export class RiderProfileComponent implements OnDestroy {
     return index;
   }
 
-  public createNewTransaction() {
+  public createNewReservation() {
+    const data = new Map();
+    data.set('riderId', this._riderProfileService.riderId);
+    data.set('riderUserId', this._riderProfileService.riderUserId);
     this._workApiRoutesService
-      .createTransaction$(this._reservationKey)
+      .createTransaction$(this._reservationKey, data)
       .pipe(
         tap(transaction => this._router.navigate([`${this.baseRoute}/transaction/${transaction.id}`])),
         catchError(_error => {

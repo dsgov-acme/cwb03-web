@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable, of, switchMap, tap } from 'rxjs';
 export class RiderProfileService {
   private readonly _recordId: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private readonly _riderId: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private readonly _riderUserId: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private readonly _rider: BehaviorSubject<RecordModel> = new BehaviorSubject<RecordModel>(new RecordModel());
   private readonly _savedLocations: BehaviorSubject<MTALocation[]> = new BehaviorSubject<MTALocation[]>([]);
   private readonly _recordData: BehaviorSubject<RecordData> = new BehaviorSubject({});
@@ -23,6 +24,10 @@ export class RiderProfileService {
 
   public get riderId(): string {
     return this._riderId.value;
+  }
+
+  public get riderUserId(): string {
+    return this._riderUserId.value;
   }
 
   public get rider() {
@@ -49,6 +54,7 @@ export class RiderProfileService {
         this._recordData.next(rider.data);
         this.rider = rider;
         this._riderId.next(rider.externalId);
+        this._riderUserId.next(rider.subjectUserId);
       }),
       switchMap(res => {
         this._riderId.next(res.externalId);
@@ -71,6 +77,7 @@ export class RiderProfileService {
   public cleanUp() {
     this._recordId.next('');
     this._riderId.next('');
+    this._riderUserId.next('');
     this._savedLocations.next([]);
     this._rider.next(new RecordModel());
   }

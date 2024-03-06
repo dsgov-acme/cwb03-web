@@ -3,49 +3,58 @@
 :host {
   padding: rem.fromPx(20px) rem.fromPx(30px);
 
-  & > .location-container {
-    border: 1px solid var(--theme-color-m3-neutral-90);
-    border-radius: 6px;
-    margin-bottom: rem.fromPx(15px);
+  & > .location-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-bottom: rem.fromPx(20px);
+  }
 
-    & > .location-inner-container {
-      padding: rem.fromPx(20px);
-      display: flex;
-      align-items: center;
+  & > .location-list {
+    & > .location-container {
+      border: 1px solid var(--theme-color-m3-neutral-90);
+      border-radius: 6px;
+      margin-bottom: rem.fromPx(15px);
 
-      & > .location-icon {
-        border: rem.fromPx(7px) solid var(--theme-color-warning);
-        border-radius: 25px;
-        max-height: rem.fromPx(24px);
-        background-color: var(--theme-color-warning);
-
-        & > .mat-icon {
-          color: var(--theme-color-white) !important;
-        }
-      }
-
-      & > .actions {
-        display: none;
-        align-content: center;
-        align-self: flex-end;
-        margin-left: auto;
-      }
-
-      & > .location-other-contents {
-        padding: rem.fromPx(10px);
-
-        & > .location-name {
-          font-weight: bold;
-          padding-bottom: rem.fromPx(5px);
-        }
-      }
-    }
-
-    &:hover {
-      background-color: var(--theme-color-m3-neutral-99);
       & > .location-inner-container {
+        padding: rem.fromPx(20px);
+        display: flex;
+        align-items: center;
+
+        & > .location-icon {
+          border: rem.fromPx(7px) solid var(--theme-color-warning);
+          border-radius: 25px;
+          max-height: rem.fromPx(24px);
+          background-color: var(--theme-color-warning);
+
+          & > .mat-icon {
+            color: var(--theme-color-white) !important;
+          }
+        }
+
         & > .actions {
-          display: inline-block;
+          display: none;
+          align-content: center;
+          align-self: flex-end;
+          margin-left: auto;
+        }
+
+        & > .location-other-contents {
+          padding: rem.fromPx(10px);
+
+          & > .location-name {
+            font-weight: bold;
+            padding-bottom: rem.fromPx(5px);
+          }
+        }
+      }
+
+      &:hover {
+        background-color: var(--theme-color-m3-neutral-99);
+        & > .location-inner-container {
+          & > .actions {
+            display: inline-block;
+          }
         }
       }
     }

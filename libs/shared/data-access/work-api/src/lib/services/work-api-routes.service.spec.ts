@@ -215,7 +215,7 @@ describe('WorkApiService', () => {
 
     service.createTransaction$('testKey').subscribe(transactionModel => {
       expect(transactionModel).toEqual(mockTransactionModel);
-      expect(service['_handlePost$']).toHaveBeenCalledWith(`/v1/transactions`, { transactionDefinitionKey: 'testKey' });
+      expect(service['_handlePost$']).toHaveBeenCalledWith(`/v1/transactions`, { transactionDefinitionKey: 'testKey', metadata: {} });
       done();
     });
 

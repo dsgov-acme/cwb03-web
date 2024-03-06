@@ -1,20 +1,37 @@
 <!-- eslint-disable @angular-eslint/template/no-call-expression -->
-<ng-container *ngFor="let location of (locations$ | async); trackBy: trackByFn">
-  <div class="location-container">
-    <div class="location-inner-container">
-      <nuverial-icon class="location-icon" [outlined]="true" [white]="true" iconName="location_on"></nuverial-icon>
-      <div class="location-other-contents">
-        <div class="location-name">{{ location.name }}</div>
-        <div class="location-address">{{ getFullAddress(location) }}</div>
-      </div>
-      <div class="actions">
-        <nuverial-button class="edit-location-btn action-btn" ariaLabel="edit" buttonStyle="filled">
-          <nuverial-icon [outlined]="true" iconName="edit"></nuverial-icon>
-        </nuverial-button>
-        <nuverial-button class="delete-location-btn action-btn" ariaLabel="delete" buttonStyle="filled">
-          <nuverial-icon [outlined]="true" iconName="delete"></nuverial-icon>
-        </nuverial-button>
+
+<div class="location-actions">
+  <nuverial-button
+    class="new-form-button"
+    ariaLabel="Schedule a ride"
+    [loading]="false"
+    (click)="createNewLocation()"
+    buttonStyle="outlined"
+    buttonType="submit"
+    colorTheme="primary"
+  >
+    <nuverial-icon iconName="add_location" />
+    New Location
+  </nuverial-button>
+</div>
+<div class="location-list">
+  <ng-container *ngFor="let location of (locations$ | async); trackBy: trackByFn">
+    <div class="location-container">
+      <div class="location-inner-container">
+        <nuverial-icon class="location-icon" [outlined]="true" [white]="true" iconName="location_on"></nuverial-icon>
+        <div class="location-other-contents">
+          <div class="location-name">{{ location.name }}</div>
+          <div class="location-address">{{ getFullAddress(location) }}</div>
+        </div>
+        <div class="actions">
+          <nuverial-button class="edit-location-btn action-btn" ariaLabel="edit" buttonStyle="filled">
+            <nuverial-icon [outlined]="true" iconName="edit"></nuverial-icon>
+          </nuverial-button>
+          <nuverial-button class="delete-location-btn action-btn" ariaLabel="delete" buttonStyle="filled">
+            <nuverial-icon [outlined]="true" iconName="delete"></nuverial-icon>
+          </nuverial-button>
+        </div>
       </div>
     </div>
-  </div>
-</ng-container>
+  </ng-container>
+</div>
