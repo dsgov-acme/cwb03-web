@@ -20,6 +20,7 @@ export interface IRecord {
   expired: string;
   lastUpdatedFrom: string;
   lastUpdatedTimestamp: string;
+  subjectUserId: string;
   data: RecordData;
 }
 
@@ -57,6 +58,7 @@ export class RecordModel implements SchemaModel<IRecord> {
   public expired = '';
   public lastUpdatedFrom = '';
   public lastUpdatedTimestamp = '';
+  public subjectUserId = '';
   public data: RecordData = {};
 
   constructor(recordSchema?: IRecord) {
@@ -78,6 +80,7 @@ export class RecordModel implements SchemaModel<IRecord> {
     this.createdTimestamp = recordSchema.createdTimestamp;
     this.expired = recordSchema.expired;
     this.lastUpdatedFrom = recordSchema.lastUpdatedFrom;
+    this.subjectUserId = recordSchema.subjectUserId;
     this.data = recordSchema.data;
   }
 
@@ -111,7 +114,7 @@ export class RecordModel implements SchemaModel<IRecord> {
       subjectProfileId: '',
       subjectProfileType: '',
       subjectUserDisplayName: '',
-      subjectUserId: '',
+      subjectUserId: this.subjectUserId,
       submittedOn: '',
       transactionDefinitionId: '',
       transactionDefinitionKey: '',

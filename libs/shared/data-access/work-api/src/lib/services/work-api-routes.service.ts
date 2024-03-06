@@ -265,8 +265,16 @@ export class WorkApiRoutesService extends HttpBaseService {
   /**
    * Create a new transaction instance
    */
-  public createTransaction$(transactionDefinitionKey: string): Observable<TransactionModel> {
-    return this._handlePost$<ITransaction>(`/v1/transactions`, { transactionDefinitionKey }).pipe(
+  public createTransaction$(transactionDefinitionKey: string, metadata?: Map<string, object>): Observable<TransactionModel> {
+    // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
+    const metadataObj: { [key: string]: object } = {};
+    if (metadata) {
+      metadata.forEach((value, key) => {
+        metadataObj[key] = value;
+      });
+    }
+
+    return this._handlePost$<ITransaction>(`/v1/transactions`, { metadata: metadataObj, transactionDefinitionKey }).pipe(
       map(transactionSchema => new TransactionModel(transactionSchema)),
     );
   }
