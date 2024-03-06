@@ -2,7 +2,7 @@
 <ng-container *ngFor="let location of (locations$ | async); trackBy: trackByFn">
   <div class="location-container">
     <div class="location-inner-container">
-      <nuverial-icon class="location-icon" [isWhite]="true" [outlined]="true" iconName="location_on"></nuverial-icon>
+      <nuverial-icon class="location-icon" [outlined]="true" [white]="true" iconName="location_on"></nuverial-icon>
       <div class="location-other-contents">
         <div class="location-name">{{ location.name }}</div>
         <div class="location-address">{{ getFullAddress(location) }}</div>

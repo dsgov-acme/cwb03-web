@@ -29,7 +29,7 @@ export class NuverialIconComponent {
   @Input() public outlined?: boolean;
   @Input() public tooltip = '';
   @Input() public tooltipDirection: TooltipPosition = 'below';
-  @Input() public isWhite = false;
+  @Input() public white = false;
 
   @HostBinding('class.nuverial-icon') public componentClass = true;
 
