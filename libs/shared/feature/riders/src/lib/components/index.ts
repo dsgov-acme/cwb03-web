@@ -1,6 +1,7 @@
 export * from './communication';
 export * from './details';
 export * from './intake';
+export * from './location-card';
 export * from './locations';
 export * from './payments';
 export * from './ride-reservation';

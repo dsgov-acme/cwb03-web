@@ -16,22 +16,6 @@
 </div>
 <div class="location-list">
   <ng-container *ngFor="let location of (locations$ | async); trackBy: trackByFn">
-    <div class="location-container">
-      <div class="location-inner-container">
-        <nuverial-icon class="location-icon" [outlined]="true" [white]="true" iconName="location_on"></nuverial-icon>
-        <div class="location-other-contents">
-          <div class="location-name">{{ location.name }}</div>
-          <div class="location-address">{{ getFullAddress(location) }}</div>
-        </div>
-        <div class="actions">
-          <nuverial-button class="edit-location-btn action-btn" ariaLabel="edit" buttonStyle="filled">
-            <nuverial-icon [outlined]="true" iconName="edit"></nuverial-icon>
-          </nuverial-button>
-          <nuverial-button class="delete-location-btn action-btn" ariaLabel="delete" buttonStyle="filled">
-            <nuverial-icon [outlined]="true" iconName="delete"></nuverial-icon>
-          </nuverial-button>
-        </div>
-      </div>
-    </div>
+    <dsg-rider-saved-location-card [location]="location" />
   </ng-container>
 </div>
