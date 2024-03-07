@@ -65,7 +65,7 @@ export class RiderReservationSummaryComponent {
   }
 
   public get occupantCount() {
-    const rider = <{ accommodations?: { numCompanion?: number } }>this.reservation.data['rider'];
+    const rider = <{ accommodations?: { numCompanion?: number } }>this.reservation.data.rider;
     if (rider?.accommodations?.numCompanion) {
       return 1 + rider.accommodations.numCompanion;
     }
