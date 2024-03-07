@@ -1,1 +1,8 @@
-<div>RIDES TO BE IMPLEMENTED</div>
+<nuverial-tabs [tabs]="tabs">
+  <ng-template let-form nuverialTabKey="reservations">
+    <dsg-rider-reservation-list></dsg-rider-reservation-list>
+  </ng-template>
+  <ng-template let-form nuverialTabKey="history">
+    <dsg-rider-ride-history></dsg-rider-ride-history>
+  </ng-template>
+</nuverial-tabs>

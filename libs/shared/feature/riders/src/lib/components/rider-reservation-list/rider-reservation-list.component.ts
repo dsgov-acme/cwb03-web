@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TransactionModel } from '@dsg/shared/data-access/work-api';
 import { FormRendererComponent } from '@dsg/shared/feature/form-nuv';
 import {
-  INuverialTab,
   NuverialBreadcrumbComponent,
   NuverialIconComponent,
   NuverialSpinnerComponent,
@@ -13,8 +12,7 @@ import {
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Observable } from 'rxjs';
 import { RiderProfileService } from '../../services';
-import { RiderReservationListComponent } from '../rider-reservation-list';
-import { RiderRideHistoryComponent } from '../rider-ride-history';
+import { RiderReservationSummaryComponent } from '../rider-reservation-summary';
 
 @UntilDestroy()
 @Component({
@@ -27,24 +25,19 @@ import { RiderRideHistoryComponent } from '../rider-ride-history';
     NuverialTabsComponent,
     NuverialIconComponent,
     NuverialTabKeyDirective,
-    RiderReservationListComponent,
-    RiderRideHistoryComponent,
+    RiderReservationSummaryComponent,
   ],
-  selector: 'dsg-rider-rides',
+  selector: 'dsg-rider-reservation-list',
   standalone: true,
-  styleUrls: ['./rider-rides.component.scss'],
-  templateUrl: './rider-rides.component.html',
+  styleUrls: ['./rider-reservation-list.component.scss'],
+  templateUrl: './rider-reservation-list.component.html',
 })
-export class RiderRidesComponent implements OnInit {
+export class RiderReservationListComponent {
   public reservations$?: Observable<TransactionModel[]> = this._riderProfileService.reservations$;
-
-  public tabs: INuverialTab[] = [
-    { key: 'reservations', label: 'Reservations' },
-    { key: 'history', label: 'Ride History' },
-  ];
 
   constructor(private readonly _riderProfileService: RiderProfileService) {}
 
-  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method, @typescript-eslint/no-empty-function
-  public ngOnInit() {}
+  public trackByFn(index: number) {
+    return index;
+  }
 }

@@ -1,0 +1,14 @@
+@use '@dsg/shared-theme/partials/functions/rem';
+
+:host {
+  & > .reservation-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-bottom: rem.fromPx(20px);
+  }
+
+  & > .reservation-list {
+    padding: rem.fromPx(20px) rem.fromPx(30px);
+  }
+}

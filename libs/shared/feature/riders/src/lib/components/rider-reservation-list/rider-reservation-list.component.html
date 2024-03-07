@@ -1,0 +1,5 @@
+<div class="reservation-list">
+  <ng-container *ngFor="let reservation of (reservations$ | async); trackBy: trackByFn">
+    <dsg-rider-reservation-summary [reservation]="reservation" />
+  </ng-container>
+</div>

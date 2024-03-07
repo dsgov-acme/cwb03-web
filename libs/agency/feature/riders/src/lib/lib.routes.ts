@@ -13,7 +13,7 @@ export const agencyFeatureRiderRoutes: Route[] = [
         path: '',
       },
     ],
-    loadComponent: () => import('@dsg/shared/feature/riders').then(module => module.RideReservationComponent),
+    loadComponent: () => import('@dsg/shared/feature/riders').then(module => module.NewRideReservationComponent),
     path: ':recordId/transaction/:transactionId',
   },
   {

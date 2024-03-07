@@ -24,10 +24,10 @@ import { RiderSummaryComponent } from '../summary';
   ],
   selector: 'dsg-intake-form-router',
   standalone: true,
-  styleUrls: ['./ride-reservation.component.scss'],
-  templateUrl: './ride-reservation.component.html',
+  styleUrls: ['./new-ride-reservation.component.scss'],
+  templateUrl: './new-ride-reservation.component.html',
 })
-export class RideReservationComponent implements OnInit, OnDestroy {
+export class NewRideReservationComponent implements OnInit, OnDestroy {
   public breadCrumbs: INuverialBreadCrumb[] = [];
   private readonly _resume = this._route.snapshot.queryParams['resume'];
   public loading = true;
