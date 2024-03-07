@@ -1,0 +1,60 @@
+<div class="reservation-container">
+  <div class="reservation-inner-container">
+    <div class="reservation-row">
+      <div class="left-container">
+        <div class="header">
+          <h1 class="pickup-date">{{ pickupTime | date: 'fullDate' }}</h1>
+          <div class="pill-container">
+            <nuverial-pill class="status-pill" [ngClass]="statusClass">{{ tripStatus }}</nuverial-pill>
+          </div>
+        </div>
+        <div class="anchor">
+          <div class="pickup-time time-container anchor-col">Promise time <span class="time-label">{{ pickupTime | date: 'h:mm a' }}</span></div>
+          <div class="anchor-location-address anchor-col">
+            <nuverial-icon iconName="trip_origin"></nuverial-icon>
+            <div class="location-address">
+              <div class="location-name" *ngIf="pickupLocationName">{{ pickupLocationName }}</div>
+              <div>{{ pickupLocationFullAddress }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="anchor">
+          <div class="dropoff-time time-container anchor-col">Drop-off time <span class="time-label">{{ dropoffTime | date: 'h:mm a' }}</span></div>
+          <div class="anchor-location-address anchor-col">
+            <nuverial-icon iconName="adjust"></nuverial-icon>
+            <div class="location-address">
+              <div class="location-name" *ngIf="dropoffLocationName">{{ dropoffLocationName }}</div>
+              <div>{{ dropoffLocationFullAddress }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="right-container">
+        <div class="description-header">
+          <span class="description-icon price">
+            <nuverial-icon [outlined]="true" iconName="sell"></nuverial-icon>
+            <span>$5.80</span>
+          </span>
+          <span class="description-icon">
+            <nuverial-icon [outlined]="true" iconName="groups"></nuverial-icon>
+            <span class="count-number">{{ occupantCount }}</span>
+          </span>
+        </div>
+        <div class="description-container">
+          <nuverial-icon iconName="compare_arrows"></nuverial-icon>
+          <div class="description-body">
+            <b>Ride ID {{ reservation.externalId }}</b>
+          </div>
+        </div>
+        <div class="description-container">
+          <nuverial-icon iconName="schedule"></nuverial-icon>
+          <div class="description-body">Expected ride {{ tripDuration | nuverialDefault: '--' }}</div>
+        </div>
+        <div class="description-container">
+          <nuverial-icon iconName="airport_shuttle"></nuverial-icon>
+          <div class="description-body">TBD</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

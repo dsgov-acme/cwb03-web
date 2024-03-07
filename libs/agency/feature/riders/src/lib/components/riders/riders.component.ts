@@ -72,7 +72,7 @@ export class RidersComponent implements OnDestroy {
   public recordListLabel = '';
   public readonly pagingRequestModel: PagingRequestModel = new PagingRequestModel({}, this._router, this._activatedRoute);
 
-  public riderListDetails$ = this._recordListService.loadRecordLists$().pipe(
+  public riderListDetails$ = this._ridersService.loadRecordLists$().pipe(
     switchMap(recordList => {
       if (!recordList) {
         this.recordDefinitionKey = '';
@@ -145,7 +145,7 @@ export class RidersComponent implements OnDestroy {
     private readonly _router: Router,
     private readonly _activatedRoute: ActivatedRoute,
     private readonly _nuverialSnackBarService: NuverialSnackBarService,
-    private readonly _recordListService: RidersService,
+    private readonly _ridersService: RidersService,
   ) {}
 
   public getRidersList() {
@@ -270,7 +270,7 @@ export class RidersComponent implements OnDestroy {
   }
 
   public updateTabCounts(key: string): Observable<RecordListCountModel[]> {
-    return this._recordListService.getRecordListTabCount$(key).pipe(
+    return this._ridersService.getRecordListTabCount$(key).pipe(
       tap((counts: DashboardCountModel[]) => {
         this.recordListCounts = counts;
       }),
@@ -294,7 +294,7 @@ export class RidersComponent implements OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    this._recordListService.cleanUp();
+    this._ridersService.cleanUp();
   }
 
   private async _buildDataSourceTable(): Promise<void> {
