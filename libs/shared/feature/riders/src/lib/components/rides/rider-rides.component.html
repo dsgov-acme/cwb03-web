@@ -1,3 +1,17 @@
+<div class="reservation-actions">
+  <nuverial-button
+    class="new-form-button"
+    ariaLabel="Schedule a ride"
+    [loading]="false"
+    (click)="createNewReservation()"
+    buttonStyle="outlined"
+    buttonType="submit"
+    colorTheme="primary"
+  >
+    <nuverial-icon class="black-icon" iconName="add" />
+    Schedule Ride
+  </nuverial-button>
+</div>
 <nuverial-tabs [tabs]="tabs">
   <ng-template let-form nuverialTabKey="reservations">
     <dsg-rider-reservation-list></dsg-rider-reservation-list>
