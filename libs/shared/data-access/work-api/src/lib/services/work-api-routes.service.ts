@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
+import { UserModel } from '@dsg/shared/data-access/user-api';
 import { ENVIRONMENT_CONFIGURATION, IEnvironment } from '@dsg/shared/utils/environment';
 import { Filter, HttpBaseService, PagingRequestModel, PagingResponseModel } from '@dsg/shared/utils/http';
 import { LoggingService } from '@dsg/shared/utils/logging';
@@ -61,6 +62,12 @@ export class WorkApiRoutesService extends HttpBaseService {
     protected override readonly _loggingService: LoggingService,
   ) {
     super(_http, `${_environment.httpConfiguration.baseUrl}/wm/api`, _loggingService);
+  }
+
+  public intializeRiderFromUser$(user: UserModel) {
+    return this._handlePost$<RecordModel>(`/v1/rider/initialize`, { email: user.email, userId: user.id }).pipe(
+      map(recordSchema => new RecordModel(recordSchema)),
+    );
   }
 
   public getPromiseTimes$(promiseTimeRequest: PromiseTimeRequest): Observable<PromiseTimeResponse> {

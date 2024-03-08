@@ -3,7 +3,7 @@ import { DEFAULT_LOCALE } from '@dsg/shared/data-access/portal-api';
 import { IUsersPaginationResponse, UserApiRoutesService, UserModel, UserPreferencesModel } from '@dsg/shared/data-access/user-api';
 import { UserEmployerProfileModel, WorkApiRoutesService } from '@dsg/shared/data-access/work-api';
 import { LRUCache } from 'lru-cache';
-import { BehaviorSubject, Observable, ReplaySubject, catchError, forkJoin, map, of, take, tap } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject, catchError, forkJoin, map, of, switchMap, take, tap } from 'rxjs';
 import { isUserId } from './user.util';
 
 @Injectable({
@@ -37,7 +37,12 @@ export class UserStateService {
    * Loads the initial user state
    */
   public initializeUser() {
-    this.getUser$().pipe(take(1)).subscribe();
+    this.getUser$()
+      .pipe(
+        take(1),
+        switchMap(user => this._workApiRoutesService.intializeRiderFromUser$(user).pipe(take(1))),
+      )
+      .subscribe();
   }
 
   /**
