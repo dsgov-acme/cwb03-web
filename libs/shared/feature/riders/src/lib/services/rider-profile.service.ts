@@ -23,12 +23,24 @@ export class RiderProfileService {
     return this._recordId.value;
   }
 
+  public set recordId(value: string) {
+    this._recordId.next(value);
+  }
+
   public get riderId(): string {
     return this._riderId.value;
   }
 
+  public set riderId(value: string) {
+    this._riderId.next(value);
+  }
+
   public get riderUserId(): string {
     return this._riderUserId.value;
+  }
+
+  public set riderUserId(value: string) {
+    this._riderUserId.next(value);
   }
 
   public get rider() {
