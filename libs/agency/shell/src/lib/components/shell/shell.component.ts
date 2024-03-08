@@ -107,9 +107,14 @@ export class ShellComponent implements OnInit {
         combineLatest([
           of([
             {
-              menuIcon: 'dashboard',
+              menuIcon: 'space_dashboard',
               navigationParams: {},
               navigationRoute: 'riders',
+            },
+            {
+              menuIcon: 'airport_shuttle',
+              navigationParams: { transactionSet: 'MTAReservation' },
+              navigationRoute: 'dashboard',
             },
           ]),
           this._userStateService.initializeUsersCache$(),
