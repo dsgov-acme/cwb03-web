@@ -10,6 +10,7 @@
     [imagePosition]="radioCard.imagePosition || 'top'"
     [pointValue]="radioCard.pointValue || 0"
     [value]="radioCard.value"
+    (change)="change.emit($event)"
   >
     <img *ngIf="radioCard.imagePath" [alt]="radioCard.imageAltLabel" [src]="radioCard.imagePath" nuverialCardContentType="image" />
     <div *ngIf="radioCard.title" nuverialCardContentType="title">{{ radioCard.title }}</div>

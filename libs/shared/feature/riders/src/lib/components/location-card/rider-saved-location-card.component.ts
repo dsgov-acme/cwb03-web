@@ -12,6 +12,9 @@ import { NuverialButtonComponent, NuverialIconComponent } from '@dsg/shared/ui/n
   templateUrl: './rider-saved-location-card.component.html',
 })
 export class RiderSavedLocationCardComponent {
+  @Input() public editEnabled = true;
+  @Input() public deleteEnabled = true;
+
   public fullAddress = '';
   private _location: MTALocation = {};
   @Input()

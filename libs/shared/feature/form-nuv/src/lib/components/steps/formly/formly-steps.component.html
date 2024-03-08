@@ -23,7 +23,7 @@
         <formly-field [field]="step" @fadeInOut></formly-field>
       </ng-container>
       <ng-template #confirmationTemplate>
-        <section class="confirmation-template">
+        <section class="confirmation-template" *ngIf="formState.mode === formStateMode.Review">
           <h1>{{ step.props?.label }}</h1>
           <p>Please review and make sure all details are correct.</p>
           <nuverial-accordion [multiExpansion]="true" [panelList]="confirmationPanelList">
@@ -38,6 +38,9 @@
               </div>
             </ng-template>
           </nuverial-accordion>
+        </section>
+        <section class="confirmation-template" *ngIf="formState.mode === formStateMode.RideSummary">
+          <nuverial-ride-summary [model]="model" />
         </section>
       </ng-template>
     </ng-template>

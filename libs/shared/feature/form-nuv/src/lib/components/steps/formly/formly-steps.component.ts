@@ -1,4 +1,5 @@
-import { CommonModule } from '@angular/common';
+/* eslint-disable @typescript-eslint/member-ordering */
+import { CommonModule, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -17,6 +18,7 @@ import {
   NuverialFooterActionsComponent,
   NuverialFormErrorsComponent,
   NuverialIconComponent,
+  NuverialRideSummaryComponent,
   NuverialSnackBarService,
   NuverialStepperComponent,
   NuverialStepperKeyDirective,
@@ -57,7 +59,9 @@ interface FormFooterActions {
     NuverialStepperKeyDirective,
     NuverialFormErrorsComponent,
     NuverialFooterActionsComponent,
+    NuverialRideSummaryComponent,
   ],
+  providers: [TitleCasePipe],
   selector: 'dsg-formly-steps',
   standalone: true,
   styleUrls: ['./formly-steps.component.scss'],
@@ -422,7 +426,11 @@ export class FormlyStepsComponent extends FormlyBaseComponent implements OnInit,
     this._titleService.setHtmlTitle(`${this._formRendererService.transaction.transactionDefinitionName} - ${field?.props?.label}`);
 
     if (field.props?.stepKey === CONFIRMATION_STEP_KEY) {
-      this.formState.mode = FormStateMode.Review;
+      if (this._formRendererService.transaction?.transactionDefinitionKey === 'MTAReservation') {
+        this.formState.mode = FormStateMode.RideSummary;
+      } else {
+        this.formState.mode = FormStateMode.Review;
+      }
       this.isConfirmationStep = true;
     } else {
       this.formState.mode = this._initialFormStateMode;

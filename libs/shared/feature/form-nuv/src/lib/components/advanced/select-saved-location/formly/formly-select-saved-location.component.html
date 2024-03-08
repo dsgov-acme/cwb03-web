@@ -14,6 +14,7 @@
     [required]="props.required || false"
     [selectOptions]="(selectOptions$ | async) || []"
     [validationMessages]="props.validationMessages"
+    (validOptionSelected)="updateSelectedLocation($event.key)"
   >
   </nuverial-select>
 </ng-template>

@@ -34,14 +34,6 @@ export class FormlySelectSavedLocationComponent extends FormlyBaseComponent<Sele
       return;
     }
 
-    if (this.field?.key === 'pickLocation.id') {
-      this.model.pickLocation = selectedLocation;
-      this.model.pickLocation.locationType = LocationType.SavedLocation;
-    } else if (this.field?.key === 'dropLocation.id') {
-      this.model.dropLocation = selectedLocation;
-      this.model.dropLocation.locationType = LocationType.SavedLocation;
-    }
-
     return selectedLocation;
   }
 
@@ -71,5 +63,20 @@ export class FormlySelectSavedLocationComponent extends FormlyBaseComponent<Sele
         });
       }),
     );
+  }
+
+  public updateSelectedLocation(selected: string) {
+    const selectedLocation = this._savedLocationService.getSavedLocationById(selected);
+    if (!selectedLocation) {
+      return;
+    }
+
+    if (this.field?.key === 'pickLocation.id') {
+      this.model.pickLocation = selectedLocation;
+      this.model.pickLocation.locationType = LocationType.SavedLocation;
+    } else if (this.field?.key === 'dropLocation.id') {
+      this.model.dropLocation = selectedLocation;
+      this.model.dropLocation.locationType = LocationType.SavedLocation;
+    }
   }
 }
