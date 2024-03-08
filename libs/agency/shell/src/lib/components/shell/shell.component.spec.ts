@@ -149,9 +149,14 @@ describe('ShellComponent', () => {
             expect(agencyMenu).toBeDefined();
             expect(agencyMenu).toStrictEqual([
               {
-                icon: 'dashboard',
+                icon: 'space_dashboard',
                 navigationParams: {},
                 navigationRoute: 'riders',
+              },
+              {
+                icon: 'airport_shuttle',
+                navigationParams: { transactionSet: 'MTAReservation' },
+                navigationRoute: 'dashboard',
               },
             ]);
 
@@ -225,9 +230,14 @@ describe('ShellComponent', () => {
     component.agencySideNavMenuItems$?.subscribe(menuItems => {
       expect(menuItems).toEqual([
         {
-          icon: 'dashboard_icon',
+          icon: 'space_dashboard',
           navigationParams: {},
           navigationRoute: 'riders',
+        },
+        {
+          icon: 'airport_shuttle',
+          navigationParams: { transactionSet: 'MTAReservation' },
+          navigationRoute: 'dashboard',
         },
       ]);
     });
