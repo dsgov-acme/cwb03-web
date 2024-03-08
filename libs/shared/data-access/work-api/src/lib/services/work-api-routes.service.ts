@@ -671,7 +671,7 @@ export class WorkApiRoutesService extends HttpBaseService {
             sortable: false,
           },
           {
-            attributePath: 'data.currentAddress.addressLine1',
+            attributePath: 'data.homeAddress.address.addressLine1',
             columnLabel: 'Address',
             sortable: false,
           },
