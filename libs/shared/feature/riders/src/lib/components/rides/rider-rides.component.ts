@@ -76,12 +76,11 @@ export class RiderRidesComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this._route.paramMap
+    this._route.parent?.paramMap
       .pipe(
         take(1),
         tap(params => {
           const riderId = params.get('recordId') ?? '';
-
           this.baseRoute = `/riders/${riderId}`;
         }),
       )

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NuverialSelectComponent } from '@dsg/shared/ui/nuverial';
+import { NuverialSelectComponent, NuverialYesNoPipe } from '@dsg/shared/ui/nuverial';
 import { FormlyModule } from '@ngx-formly/core';
 
 import { FormlyBaseComponent } from '../../base';
@@ -8,7 +8,7 @@ import { SelectFieldProperties } from '../models/formly-select.model';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormlyModule, NuverialSelectComponent],
+  imports: [CommonModule, FormlyModule, NuverialSelectComponent, NuverialYesNoPipe],
   selector: 'dsg-formly-select',
   standalone: true,
   styleUrls: ['./formly-select.component.scss'],

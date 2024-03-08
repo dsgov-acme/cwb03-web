@@ -6,10 +6,10 @@
       <div class="location-address">{{ fullAddress }}</div>
     </div>
     <div class="actions">
-      <nuverial-button class="edit-location-btn action-btn" ariaLabel="edit" buttonStyle="filled">
+      <nuverial-button class="edit-location-btn action-btn" ariaLabel="edit" *ngIf="editEnabled" buttonStyle="filled">
         <nuverial-icon [outlined]="true" iconName="edit"></nuverial-icon>
       </nuverial-button>
-      <nuverial-button class="delete-location-btn action-btn" ariaLabel="delete" buttonStyle="filled">
+      <nuverial-button class="delete-location-btn action-btn" ariaLabel="delete" *ngIf="deleteEnabled" buttonStyle="filled">
         <nuverial-icon [outlined]="true" iconName="delete"></nuverial-icon>
       </nuverial-button>
     </div>
