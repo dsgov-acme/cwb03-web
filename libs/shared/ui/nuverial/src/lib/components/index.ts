@@ -29,6 +29,7 @@ export * from './radio-button';
 export * from './radio-card';
 export * from './radio-cards';
 export * from './rich-text';
+export * from './ride-summary';
 export * from './section-header';
 export * from './select';
 export * from './selector-button';

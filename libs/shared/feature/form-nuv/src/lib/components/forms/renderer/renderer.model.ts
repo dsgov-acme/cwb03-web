@@ -3,6 +3,7 @@ import { FormlyFormOptions } from '@ngx-formly/core';
 export enum FormStateMode {
   Edit = 'edit',
   Review = 'review',
+  RideSummary = 'rideSummary',
 }
 
 export enum FormStateStepperMode {

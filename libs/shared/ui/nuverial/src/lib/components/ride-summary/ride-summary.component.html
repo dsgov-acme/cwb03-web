@@ -1,0 +1,65 @@
+<div class="location-container">
+  <div class="location-inner-container">
+    <div class="pickup-location">
+      <nuverial-icon class="location-icon" [outlined]="true" [white]="true" iconName="location_on"></nuverial-icon>
+      <div class="location-other-contents">
+        <div class="location-name" *ngIf="model?.pickLocation?.name">{{ model?.pickLocation.name }}</div>
+        <div class="location-address" *ngIf="model?.pickLocation?.name">{{ pickupAddress }}</div>
+        <div class="location-name" *ngIf="!model?.pickLocation?.name">{{ pickupAddress }}</div>
+        <div class="location-address">Pickup at {{ model?.promiseTime?.pickupTime | nuverialFormatTimePipe}}</div>
+      </div>
+    </div>
+    <div class="center-arrow">
+      <nuverial-icon class="arrow-icon" [iconName]="model?.tripType === 'ONE_WAY' ? 'arrow_right_alt' : 'sync_alt'"></nuverial-icon>
+      <div class="trip-duration">{{ model?.promiseTime?.pickupTime | nuverialFormatDurationPipe: model?.promiseTime?.dropTime}}</div>
+    </div>
+    <div class="drop-location">
+      <nuverial-icon class="location-icon" [outlined]="true" iconName="location_on"></nuverial-icon>
+      <div class="location-other-contents">
+        <div class="location-name" *ngIf="model?.dropLocation?.name">{{ model?.dropLocation.name }}</div>
+        <div class="location-address" *ngIf="model?.dropLocation?.name">{{ dropAddress }}</div>
+        <div class="location-name" *ngIf="!model?.dropLocation?.name">{{ dropAddress }}</div>
+        <div class="location-address">Dropoff at {{ model?.promiseTime?.dropTime | nuverialFormatTimePipe}}</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="trip-details-container">
+  <div class="trip-title">Trip Type</div>
+  <div class="trip-type-container">
+    <nuverial-icon class="trip-icon" [iconName]="model?.tripType === 'ONE_WAY' ? 'arrow_right_alt' : 'sync_alt'"></nuverial-icon>
+    <div class="trip-type">{{ model?.tripType | nuverialRemoveUnderscoresPipe | nuverialSafeTitlecasePipe }}</div>
+  </div>
+  <div class="fare-title">Fare</div>
+  <div class="fare-type-container">
+    <nuverial-icon class="fare-icon" iconName="sell"></nuverial-icon>
+    <div class="fare-type">$5.80</div>
+  </div>
+  <div class="accommodations-container">
+    <div class="accommodation-title">Accommodations</div>
+    <div class="accommodation-label-group">
+      <nuverial-icon class="accommodation-icon" iconName="assist_walker"></nuverial-icon>
+      <div class="accommodation-label">Ambulatory Seats Required:</div>
+      <div class="accommodation-value">{{ model?.rider?.accommodations?.ambSeats | nuverialYesNoPipe }}</div>
+    </div>
+
+    <div class="accommodation-label-group">
+      <nuverial-icon class="accommodation-icon" iconName="accessible"></nuverial-icon>
+      <div class="accommodation-label">Wheelchair Seats Required:</div>
+      <div class="accommodation-value">{{ model?.rider?.accommodations?.wcSeats | nuverialYesNoPipe }}</div>
+    </div>
+
+    <div class="accommodation-label-group">
+      <nuverial-icon class="accommodation-icon" iconName="groups"></nuverial-icon>
+      <div class="accommodation-label">Number of Companions:</div>
+      <div class="accommodation-value">{{ model?.rider?.accommodations?.numCompanion }}</div>
+    </div>
+  </div>
+</div>
+<div class="vehicle-details-container">
+  <div class="vehicle-title">Vehicle Details</div>
+  <div class="vehicle-type-container">
+    <nuverial-icon class="vehicle-icon" iconName="airport_shuttle"></nuverial-icon>
+    <div class="vehicle-type">Ford Transit Van XLT</div>
+  </div>
+</div>

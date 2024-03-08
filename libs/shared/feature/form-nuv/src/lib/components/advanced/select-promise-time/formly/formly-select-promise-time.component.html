@@ -13,6 +13,7 @@
     [legend]="props.label"
     [radioCards]="options || []"
     [required]="props.required!"
+    (change)="updateSelectedTime($event.value)"
   />
 </ng-template>
 
@@ -21,8 +22,10 @@
 </ng-template>
 
 <ng-template #reviewTemplate>
-  <div *ngIf="reviewDetails as details">
-    <div class="field-label">{{ details.label }}</div>
-    <div class="field-label">{{ details.time }}</div>
+  <div *ngIf="reviewDetails as promiseTime">
+    <div class="field-label">Pickup at {{ promiseTime?.pickupTime | nuverialFormatTimePipe}}</div>
+    <div class="field-label">
+      Arrive by {{ promiseTime?.dropTime | nuverialFormatTimePipe}} - {{ promiseTime?.pickupTime | nuverialFormatDurationPipe: promiseTime?.dropTime}} trip`
+    </div>
   </div>
 </ng-template>

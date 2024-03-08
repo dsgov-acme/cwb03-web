@@ -17,7 +17,7 @@
 
 <ng-template #reviewTemplate>
   <div class="field-value-container">
-    <span class="field-label">{{ props.label }}:</span>
-    <span class="field-value">{{ formControl.value }}</span>
+    <span class="field-label">{{ props.label }}</span>
+    <span class="field-value">{{ formControl.value | nuverialRemoveUnderscoresPipe | nuverialSafeTitlecasePipe | nuverialYesNoPipe }}</span>
   </div>
 </ng-template>

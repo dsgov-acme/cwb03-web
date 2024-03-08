@@ -23,6 +23,6 @@
 <ng-template #reviewTemplate>
   <div class="field-value-container">
     <div class="field-label">{{ props.label }}:</div>
-    <div class="field-value">{{ formControl.value }}</div>
+    <div class="field-value">{{ formControl.value | nuverialYesNoPipe }}</div>
   </div>
 </ng-template>

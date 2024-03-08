@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NuverialCheckboxComponent } from '@dsg/shared/ui/nuverial';
+import { NuverialCheckboxComponent, NuverialYesNoPipe } from '@dsg/shared/ui/nuverial';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyBaseComponent } from '../../base';
 import { CheckboxFieldProperties } from '../models/formly-checkbox.model';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormlyModule, NuverialCheckboxComponent],
+  imports: [CommonModule, FormlyModule, NuverialCheckboxComponent, NuverialYesNoPipe],
   selector: 'dsg-formly-checkbox',
   standalone: true,
   styleUrls: ['./formly-checkbox.component.scss'],

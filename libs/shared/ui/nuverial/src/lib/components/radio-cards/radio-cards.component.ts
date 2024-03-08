@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, forwardRef, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormInputBaseDirective } from '../../common';
-import { NuverialCardCommonComponent } from '../../directives';
+import { CardChange, NuverialCardCommonComponent } from '../../directives';
 import { NuverialCardGroupComponent } from '../card-group/card-group.component';
 import { NuverialIconComponent } from '../icon';
 import { NuverialRadioCardComponent } from '../radio-card/radio-card.component';
@@ -60,6 +60,8 @@ export class NuverialRadioCardsComponent extends FormInputBaseDirective {
   @Input() public radioCards!: INuverialRadioCard[];
   @Input() public columns? = 2;
   @Input() public groupName!: string;
+  @Output() public readonly change = new EventEmitter<CardChange>();
+
   constructor() {
     super();
   }
